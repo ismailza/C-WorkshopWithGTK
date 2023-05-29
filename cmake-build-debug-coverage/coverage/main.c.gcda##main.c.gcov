@@ -1,0 +1,4855 @@
+        -:    0:Source:C:/Users/USER/Desktop/GTK/Dame_game/main.c
+        -:    0:Graph:C:\Users\USER\Desktop\GTK\Dame_game\cmake-build-debug-coverage\CMakeFiles\Dame_game.dir\main.c.gcno
+        -:    0:Data:C:\Users\USER\Desktop\GTK\Dame_game\cmake-build-debug-coverage\CMakeFiles\Dame_game.dir\main.c.gcda
+        -:    0:Runs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <gtk/gtk.h>
+        -:    3:
+        -:    4:typedef enum {
+        -:    5:    CHKS_OWNER_NONE,
+        -:    6:    CHKS_OWNER_ONE,//user
+        -:    7:    CHKS_OWNER_TWO,//machine
+        -:    8:} ChksOwner;
+        -:    9:
+        -:   10:typedef struct clm
+        -:   11:{
+        -:   12:    int row;
+        -:   13:    int col;
+        -:   14:    int diag_not_verify;
+        -:   15:    int diag_not_verify2;
+        -:   16:    struct clm *suiv;
+        -:   17:}cellule;
+        -:   18:
+        -:   19:typedef struct fl
+        -:   20:{
+        -:   21:    cellule *tete;
+        -:   22:    cellule *queue;
+        -:   23:}File;
+        -:   24:
+        -:   25:typedef struct cc1
+        -:   26:{
+        -:   27:    int score;
+        -:   28:    int row;
+        -:   29:    int col;
+        -:   30:    struct cc1 *topleft;
+        -:   31:    struct cc1 *topright;
+        -:   32:    struct cc1 *suiv;
+        -:   33:    struct cc1 *butright;
+        -:   34:    struct cc1 *butleft;
+        -:   35:}cellule2;
+        -:   36:
+        -:   37:typedef struct
+        -:   38:{
+        -:   39:    GtkWidget *button;
+        -:   40:    struct Chkswindow *view_table;
+        -:   41:    ChksOwner owner;//proprietere
+        -:   42:    gboolean is_queen;
+        -:   43:    int col;//colonne
+        -:   44:    int row;
+        -:   45:}ChksField;
+        -:   46:
+        -:   47:
+        -:   48:typedef struct
+        -:   49:{
+        -:   50:    File *f;
+        -:   51:    ChksField *field;
+        -:   52:}Glob;
+        -:   53:
+        -:   54:typedef struct
+        -:   55:{
+        -:   56:    GtkWidget *gr;
+        -:   57:    ChksField *filed[8][8];
+        -:   58:    ChksField *last;//to know wich button is clicked
+        -:   59:}Chkview;
+        -:   60:
+        -:   61:typedef struct
+        -:   62:{
+        -:   63:    int x;//row
+        -:   64:    int y;//column
+        -:   65:}Player_piece;
+        -:   66:
+        -:   67:typedef struct
+        -:   68:{
+        -:   69:    Player_piece Tab[12];//12 piece pour chaque joueur
+        -:   70:    int nbr_piece_disp;//nombre de piece restant pour chaque joueur
+        -:   71:}ChkPlayer;
+        -:   72:
+        -:   73:typedef struct Chkswindow
+        -:   74:{
+        -:   75:    GtkWidget *win;
+        -:   76:    GtkWidget *header_bar;
+        -:   77:    Chkview *table;//table dame*
+        -:   78:    Glob *g;//
+        -:   79:    int depth;
+        -:   80:    ChkPlayer *user;//pour indiquer positionnement des pieces du joueur
+        -:   81:    ChkPlayer *machine;//pour indiquer positionnement des pieces de la machine
+        -:   82:}Chkswindow;
+        -:   83:
+        -:   84:
+        -:   85:typedef struct Ls
+        -:   86:{
+        -:   87:    int x, y;
+        -:   88:    struct Ls *suiv;
+        -:   89:}cellule7;
+        -:   90:
+        -:   91:typedef struct LsL
+        -:   92:{
+        -:   93:    cellule7 *liste;
+        -:   94:    struct LsL *suiv;
+        -:   95:} CelluleList;
+        -:   96:
+        -:   97:typedef struct {
+        -:   98:    File *best;
+        -:   99:    int numfield;
+        -:  100:    int score;
+        -:  101:}bestpath;
+        -:  102:
+        -:  103:
+        -:  104:typedef struct ccn
+        -:  105:{
+        -:  106:    cellule7 *liste;
+        -:  107:    int numfield;
+        -:  108:    int score;
+        -:  109:    struct ccn *suiv;
+        -:  110:}cellule5;
+        -:  111:
+        -:  112:
+        -:  113:typedef struct {
+        -:  114:    ChksField *filed[8][8];
+        -:  115:    ChkPlayer *machine;
+        -:  116:    ChkPlayer *user;
+        -:  117:}etat_window;
+        -:  118:
+function chks_field_set_owner called 2304 returned 100% blocks executed 96%
+     2304:  119:void chks_field_set_owner(ChksField *field)
+        -:  120:{
+        -:  121:    GtkCssProvider* provider;
+     2304:  122:    provider = gtk_css_provider_new();
+     2304:  122-block  0
+call    0 returned 2304
+        -:  123:
+     2304:  124:    gtk_css_provider_load_from_path(GTK_CSS_PROVIDER(provider),"C:\\Users\\USER\\Desktop\\GTK\\Dame_game\\test.css",NULL);
+call    0 returned 2304
+call    1 returned 2304
+        -:  125:    GtkStyleContext *context;
+     2304:  126:    context = gtk_widget_get_style_context(field->button);
+call    0 returned 2304
+     2304:  127:    switch (field->owner) {
+branch  0 taken 1562
+branch  1 taken 310
+branch  2 taken 432
+branch  3 taken 0
+     1562:  128:        case CHKS_OWNER_NONE:
+     1562:  129:            gtk_style_context_remove_class(context, "chks-player-one");
+     1562:  129-block  0
+call    0 returned 1562
+     1562:  130:            gtk_style_context_remove_class(context, "chks-player-two");
+call    0 returned 1562
+     1562:  131:            gtk_style_context_remove_class(context, "chks-player-one-quenn");
+call    0 returned 1562
+     1562:  132:            gtk_style_context_remove_class(context, "chks-player-two-quenn");
+call    0 returned 1562
+     1562:  133:            break;
+      310:  134:        case CHKS_OWNER_ONE:
+      310:  135:            gtk_style_context_remove_class(context, "chks-player-one-pre");
+      310:  135-block  0
+call    0 returned 310
+     310*:  136:            if(field->is_queen)gtk_style_context_add_class(context, "chks-player-one-quenn");
+branch  0 taken 0 (fallthrough)
+branch  1 taken 310
+    %%%%%:  136-block  0
+call    2 never executed
+      310:  137:            else gtk_style_context_add_class(context, "chks-player-one");
+      310:  137-block  0
+call    0 returned 310
+      310:  138:            break;
+      310:  138-block  0
+      432:  139:        case CHKS_OWNER_TWO:
+      432:  140:            gtk_style_context_remove_class(context, "chks-player-two-pre");
+      432:  140-block  0
+call    0 returned 432
+      432:  141:            if(field->is_queen)gtk_style_context_add_class(context, "chks-player-two-quenn");
+branch  0 taken 18 (fallthrough)
+branch  1 taken 414
+       18:  141-block  0
+call    2 returned 18
+      414:  142:            else gtk_style_context_add_class(context, "chks-player-two");
+      414:  142-block  0
+call    0 returned 414
+      432:  143:            break;
+      432:  143-block  0
+        -:  144:    }
+     2304:  145:    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider),
+     2304:  145-block  0
+call    0 returned 2304
+call    1 returned 2304
+        -:  146:                                   GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+     2304:  147:}
+        -:  148:
+function apply_style_button called 36 returned 100% blocks executed 100%
+       36:  149:void apply_style_button(ChksField *field[8][8])
+        -:  150:{
+        -:  151:    int i,j;
+      324:  152:    for(i=0;i<8;i++)
+       36:  152-block  0
+      288:  152-block  1
+      324:  152-block  2
+branch  0 taken 288
+branch  1 taken 36 (fallthrough)
+     2592:  153:        for(j=0;j<8;j++)
+      288:  153-block  0
+     2592:  153-block  1
+branch  0 taken 2304
+branch  1 taken 288 (fallthrough)
+     2304:  154:            chks_field_set_owner(field[i][j]);
+     2304:  154-block  0
+call    0 returned 2304
+       36:  155:}
+        -:  156:
+        -:  157:
+function delete_value_ChkPlayer called 188 returned 100% blocks executed 91%
+      188:  158:int delete_value_ChkPlayer(ChkPlayer *chpl,int row ,int col)
+        -:  159:{
+     1012:  160:    for(int i=0;chpl->nbr_piece_disp;i++)
+      188:  160-block  0
+      824:  160-block  1
+     1012:  160-block  2
+branch  0 taken 1012
+branch  1 taken 0 (fallthrough)
+        -:  161:    {
+     1012:  162:        if(chpl->Tab[i].x==row && chpl->Tab[i].y==col)
+     1012:  162-block  0
+branch  0 taken 258 (fallthrough)
+branch  1 taken 754
+      258:  162-block  1
+branch  2 taken 188 (fallthrough)
+branch  3 taken 70
+        -:  163:        {
+     1536:  164:            for(int j=i;j<chpl->nbr_piece_disp;j++)
+      188:  164-block  0
+     1536:  164-block  1
+branch  0 taken 1348
+branch  1 taken 188 (fallthrough)
+        -:  165:            {
+     1348:  166:                chpl->Tab[j].x=chpl->Tab[j+1].x;
+     1348:  167:                chpl->Tab[j].y=chpl->Tab[j+1].y;
+     1348:  167-block  0
+        -:  168:            }
+      188:  169:            chpl->nbr_piece_disp--;
+      188:  170:            return (int)1;
+      188:  170-block  0
+        -:  171:        }
+        -:  172:    }
+    #####:  173:    return (int)0;
+    %%%%%:  173-block  0
+        -:  174:}
+        -:  175:
+function creer_player called 2224 returned 100% blocks executed 60%
+     2224:  176:ChkPlayer *creer_player()
+        -:  177:{
+     2224:  178:    ChkPlayer *pl=(ChkPlayer*) malloc(sizeof (ChkPlayer));
+     2224:  179:    if(!pl)
+     2224:  179-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 2224
+        -:  180:    {
+    #####:  181:        printf("error allocation");
+    %%%%%:  181-block  0
+call    0 never executed
+    #####:  182:        exit(-1);
+call    0 never executed
+        -:  183:    }
+     2224:  184:    pl->nbr_piece_disp=0;
+     2224:  185:    return (ChkPlayer*)pl;
+     2224:  185-block  0
+        -:  186:}
+        -:  187:
+function creer_table called 1 returned 100% blocks executed 60%
+        1:  188:Chkview *creer_table()
+        -:  189:{
+        1:  190:    Chkview *tb= malloc(sizeof (Chkview));
+        1:  191:    if(!tb)
+        1:  191-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1
+        -:  192:    {
+    #####:  193:        printf("error allocation");
+    %%%%%:  193-block  0
+call    0 never executed
+    #####:  194:        exit(-1);
+call    0 never executed
+        -:  195:    }
+        1:  196:    return (Chkview*)tb;
+        1:  196-block  0
+        -:  197:}
+function creer_initaliser_file called 1112 returned 100% blocks executed 60%
+     1112:  198:File * creer_initaliser_file()
+        -:  199:{
+     1112:  200:    File *f=(File*) malloc(sizeof (File));
+     1112:  201:    if(!f)
+     1112:  201-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1112
+        -:  202:    {
+    #####:  203:        printf("error allocation");
+    %%%%%:  203-block  0
+call    0 never executed
+    #####:  204:        exit(-1);
+call    0 never executed
+        -:  205:    }
+     1112:  206:    f->tete=NULL;
+     1112:  207:    f->queue=NULL;
+     1112:  208:    return (File*)f;
+     1112:  208-block  0
+        -:  209:}
+        -:  210:
+        -:  211:
+function crrer_initailiser_ccellule2 called 2497 returned 100% blocks executed 60%
+     2497:  212:cellule2 *crrer_initailiser_ccellule2(int score,int row,int col)
+        -:  213:{
+     2497:  214:    cellule2  *ne=(cellule2*)malloc(sizeof (cellule2));
+     2497:  215:    if(!ne)
+     2497:  215-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 2497
+        -:  216:    {
+    #####:  217:        printf("error allocation");
+    %%%%%:  217-block  0
+call    0 never executed
+    #####:  218:        exit(-1);
+call    0 never executed
+        -:  219:    }
+     2497:  220:    ne->score=score;
+     2497:  221:    ne->row=row;
+     2497:  222:    ne->col=col;
+     2497:  223:    ne->suiv=NULL;
+     2497:  224:    ne->butleft=NULL;
+     2497:  225:    ne->butright=NULL;
+     2497:  226:    ne->topleft=NULL;
+     2497:  227:    ne->topright=NULL;
+     2497:  228:    return (cellule2*)ne;
+     2497:  228-block  0
+        -:  229:}
+        -:  230:
+function est_vide_file called 188 returned 100% blocks executed 83%
+      188:  231:int est_vide_file(File *f)
+        -:  232:{
+     188*:  233:    if(!f)return (int)-1;
+      188:  233-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 188
+    %%%%%:  233-block  1
+      188:  234:    if(f->tete==NULL)return (int)1;//File vide;
+      188:  234-block  0
+branch  0 taken 148 (fallthrough)
+branch  1 taken 40
+      148:  234-block  1
+       40:  235:    else return (int)0;//file not vide
+       40:  235-block  0
+        -:  236:}
+        -:  237:
+function enfiler called 21 returned 100% blocks executed 67%
+       21:  238:int enfiler(File *f,cellule *ne)
+        -:  239:{
+      21*:  240:    if(!f)return (int)-1;
+       21:  240-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 21
+    %%%%%:  240-block  1
+       21:  241:    if(!f->tete)
+       21:  241-block  0
+branch  0 taken 21 (fallthrough)
+branch  1 taken 0
+        -:  242:    {
+       21:  243:        f->tete=ne;
+       21:  244:        f->queue=ne;
+       21:  245:        return (int)1;
+       21:  245-block  0
+        -:  246:    }
+    #####:  247:    f->queue->suiv=ne;
+    #####:  248:    f->queue=ne;
+    #####:  249:    return (int)1;
+    %%%%%:  249-block  0
+        -:  250:}
+        -:  251:
+        -:  252:
+function defiler called 336 returned 100% blocks executed 83%
+      336:  253:int defiler(File *f)
+        -:  254:{
+        -:  255:    cellule *q;
+     336*:  256:    if(!f)return (int)-1;
+      336:  256-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 336
+    %%%%%:  256-block  1
+      336:  257:    if(f->tete==f->queue)
+      336:  257-block  0
+branch  0 taken 148 (fallthrough)
+branch  1 taken 188
+        -:  258:    {
+      148:  259:        f->tete=NULL;
+      148:  260:        f->queue=NULL;
+      148:  261:        return (int)1;
+      148:  261-block  0
+        -:  262:    }
+      188:  263:    q=f->tete;
+      188:  264:    f->tete=f->tete->suiv;
+      188:  265:    free(q);
+      188:  266:    return (int)1;
+      188:  266-block  0
+        -:  267:}
+        -:  268:
+        -:  269://row et col sont les coordonnés de last
+function verify_for_not_queen called 5 returned 100% blocks executed 48%
+        5:  270:int verify_for_not_queen(ChksField *filed,ChksField *last,int row,int col,File *f)
+        -:  271:{
+        5:  272:    int a,b,c,d,droite=0,gauche=0;
+        5:  273:    if(f)
+        5:  273-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 5
+        -:  274:    {
+    #####:  275:        if(f->tete->row==row && f->tete->col==col)defiler(f);
+    %%%%%:  275-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  275-block  1
+branch  2 never executed
+branch  3 never executed
+    %%%%%:  275-block  2
+call    4 never executed
+        -:  276:    }
+        5:  277:    if(last->view_table->table->filed[row-1][col-1]->row==filed->row &&
+        5:  277-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 4
+        1:  278:       last->view_table->table->filed[row-1][col-1]->col==filed->col)
+        1:  278-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1
+    #####:  279:        return (int)1;
+    %%%%%:  279-block  0
+        5:  280:    if(row+1<=8 && col+1<=8)
+        5:  280-block  0
+branch  0 taken 5 (fallthrough)
+branch  1 taken 0
+        5:  280-block  1
+branch  2 taken 5 (fallthrough)
+branch  3 taken 0
+        -:  281:    {
+        5:  282:        if(last->view_table->table->filed[row+1-1][col+1-1]->owner==CHKS_OWNER_TWO)//right
+        5:  282-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 5
+        -:  283:        {
+    #####:  284:            if(row+2<=8 && col+2<=8)
+    %%%%%:  284-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  284-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  285:            {
+    #####:  286:                if(last->view_table->table->filed[row+2-1][col+2-1]->owner==CHKS_OWNER_NONE) {
+    %%%%%:  286-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  287:                    a = last->view_table->table->filed[row + 2 - 1][col + 2 - 1]->row;
+    #####:  288:                    b = last->view_table->table->filed[row + 2 - 1][col + 2 - 1]->col;
+    #####:  289:                    droite = verify_for_not_queen(filed, last, a, b, f);
+    %%%%%:  289-block  0
+call    0 never executed
+        -:  290:                }
+        -:  291:            }
+        -:  292:        }
+        -:  293:    }
+        5:  294:    if(row+1<=8 && col-1>=1)
+        5:  294-block  0
+branch  0 taken 5 (fallthrough)
+branch  1 taken 0
+        5:  294-block  1
+branch  2 taken 5 (fallthrough)
+branch  3 taken 0
+        -:  295:    {
+        5:  296:        if(last->view_table->table->filed[row+1-1][col-1-1]->owner==CHKS_OWNER_TWO)//left
+        5:  296-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 5
+        -:  297:        {
+    #####:  298:            if(row+2<=8 && col-2>=1)
+    %%%%%:  298-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  298-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  299:            {
+    #####:  300:                if(last->view_table->table->filed[row+2-1][col-2-1]->owner==CHKS_OWNER_NONE)
+    %%%%%:  300-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  301:                {
+    #####:  302:                    a=last->view_table->table->filed[row+2-1][col-2-1]->row;
+    #####:  303:                    b=last->view_table->table->filed[row+2-1][col-2-1]->col;
+    #####:  304:                    gauche=verify_for_not_queen(filed,last,a,b,f);
+    %%%%%:  304-block  0
+call    0 never executed
+        -:  305:                }
+        -:  306:            }
+        -:  307:        }
+        -:  308:    }
+        5:  309:    if(droite>=gauche)return (int)droite;
+        5:  309-block  0
+branch  0 taken 5 (fallthrough)
+branch  1 taken 0
+        5:  309-block  1
+    #####:  310:    else return (int)gauche;
+    %%%%%:  310-block  0
+        -:  311:}
+        -:  312:
+function first_is_one_four called 0 returned 0% blocks executed 0%
+    #####:  313:int first_is_one_four(ChksField *last)
+        -:  314:{
+        -:  315:    int a,b;
+    #####:  316:    a=last->row;
+    #####:  317:    b=last->col;
+    #####:  318:    if((last->view_table->table->filed[a+1-1][b+1-1]->owner=CHKS_OWNER_ONE) &&
+    %%%%%:  318-block  0
+    #####:  319:            (last->view_table->table->filed[a+1-1][b+-1-1]->owner=CHKS_OWNER_ONE) &&
+    %%%%%:  319-block  0
+    #####:  320:            (last->view_table->table->filed[a-1-1][b-1-1]->owner=CHKS_OWNER_ONE) &&
+    %%%%%:  320-block  0
+    #####:  321:            (last->view_table->table->filed[a-1-1][b+1-1]->owner=CHKS_OWNER_ONE ))return (int)1;
+    %%%%%:  321-block  0
+    %%%%%:  321-block  1
+        -:  322:    else return (int)0;
+        -:  323:}
+        -:  324:
+function first_is_one called 0 returned 0% blocks executed 0%
+    #####:  325:int first_is_one(ChksField *last,int i)
+        -:  326:{
+        -:  327:    int a,b;
+    #####:  328:    a=last->row;
+    #####:  329:    b=last->col;
+    #####:  330:    switch (i) {
+    %%%%%:  330-block  0
+branch  0 never executed
+branch  1 never executed
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+    #####:  331:        case 1:
+    #####:  332:            if(last->view_table->table->filed[a-1-1][b+1-1]->owner==CHKS_OWNER_ONE)return (int)1;
+    %%%%%:  332-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  332-block  1
+    #####:  333:            else return (int)0;
+    %%%%%:  333-block  0
+    #####:  334:        case 2:
+    #####:  335:            if(last->view_table->table->filed[a-1-1][b-1-1]->owner==CHKS_OWNER_ONE)return (int)1;
+    %%%%%:  335-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  335-block  1
+    #####:  336:            else return (int)0;
+    %%%%%:  336-block  0
+    #####:  337:        case 3:
+    #####:  338:            if(last->view_table->table->filed[a+1-1][b-1-1]->owner==CHKS_OWNER_ONE)return (int)1;
+    %%%%%:  338-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  338-block  1
+    #####:  339:            else return (int)0;
+    %%%%%:  339-block  0
+    #####:  340:        case 4:
+    #####:  341:            if(last->view_table->table->filed[a+1-1][b+1-1]->owner==CHKS_OWNER_ONE)return (int)1;
+    %%%%%:  341-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  341-block  1
+    #####:  342:            else return (int)0;
+    %%%%%:  342-block  0
+        -:  343:    }
+    #####:  344:    return (int)0;
+    %%%%%:  344-block  0
+        -:  345:}
+        -:  346:
+function first_one_or_two called 40 returned 100% blocks executed 51%
+       40:  347:void first_one_or_two(ChksField *last,int *a,int *b,int i,ChksOwner owner,int et,etat_window *etw,int row,int col)
+        -:  348:{
+        -:  349:    int k,j;
+       40:  350:    if(last)
+       40:  350-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 40
+        -:  351:    {
+    #####:  352:        k=last->row;
+    #####:  353:        j=last->col;
+    %%%%%:  353-block  0
+        -:  354:    }else
+        -:  355:    {
+       40:  356:        k=row;
+       40:  357:        j=col;
+       40:  357-block  0
+        -:  358:    }
+       40:  359:    switch (i) {
+       40:  359-block  0
+branch  0 taken 9
+branch  1 taken 11
+branch  2 taken 9
+branch  3 taken 11
+branch  4 taken 0
+        9:  360:        case 1:
+        9:  361:            k--;
+        9:  362:            j++;
+       9*:  363:            while (k>=1 && j<=8)
+        9:  363-block  0
+        9:  363-block  1
+branch  0 taken 0 (fallthrough)
+branch  1 taken 9
+    %%%%%:  363-block  2
+branch  2 never executed
+branch  3 never executed
+        -:  364:            {
+    #####:  365:                if(last)
+    %%%%%:  365-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  366:                {
+    #####:  367:                    if(last->view_table->table->filed[k-1][j-1]->owner==owner)
+    %%%%%:  367-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  368:                    {
+    #####:  369:                        *a=last->view_table->table->filed[k-1][j-1]->row;
+    #####:  370:                        *b=last->view_table->table->filed[k-1][j-1]->col;
+    #####:  371:                        return;
+    %%%%%:  371-block  0
+    #####:  372:                    }else if(last->view_table->table->filed[k-1][j-1]->owner==
+    %%%%%:  372-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  373:                    CHKS_OWNER_NONE)
+        -:  374:                    {
+    #####:  375:                        k--;
+    #####:  376:                        j++;
+    #####:  377:                        continue;
+    %%%%%:  377-block  0
+    #####:  378:                    }else break;
+    %%%%%:  378-block  0
+        -:  379:                }else
+        -:  380:                {
+    #####:  381:                    if(etw->filed[k-1][j-1]->owner==owner)
+    %%%%%:  381-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  382:                    {
+    #####:  383:                        *a=etw->filed[k-1][j-1]->row;
+    #####:  384:                        *b=etw->filed[k-1][j-1]->col;
+    #####:  385:                        return;
+    %%%%%:  385-block  0
+    #####:  386:                    }else if(etw->filed[k-1][j-1]->owner==
+    %%%%%:  386-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  387:                             CHKS_OWNER_NONE)
+        -:  388:                    {
+    #####:  389:                        k--;
+    #####:  390:                        j++;
+    #####:  391:                        continue;
+    %%%%%:  391-block  0
+    #####:  392:                    }else break;
+    %%%%%:  392-block  0
+        -:  393:                }
+        -:  394:            }
+        9:  395:            break;
+        9:  395-block  0
+       11:  396:        case 2:
+       11:  397:            k--;
+       11:  398:            j--;
+       12:  399:            while (k>=1 && j>=1)
+       11:  399-block  0
+       12:  399-block  1
+branch  0 taken 3 (fallthrough)
+branch  1 taken 9
+        3:  399-block  2
+branch  2 taken 1
+branch  3 taken 2 (fallthrough)
+        -:  400:            {
+        1:  401:                if(last)
+        1:  401-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1
+        -:  402:                {
+    #####:  403:                    if(last->view_table->table->filed[k-1][j-1]->owner==owner)
+    %%%%%:  403-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  404:                    {
+    #####:  405:                        *a=last->view_table->table->filed[k-1][j-1]->row;
+    #####:  406:                        *b=last->view_table->table->filed[k-1][j-1]->col;
+    #####:  407:                        return;
+    %%%%%:  407-block  0
+    #####:  408:                    }else if(last->view_table->table->filed[k-1][j-1]->owner==
+    %%%%%:  408-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  409:                             CHKS_OWNER_NONE)
+        -:  410:                    {
+    #####:  411:                        k--;
+    #####:  412:                        j--;
+    #####:  413:                        continue;
+    %%%%%:  413-block  0
+    #####:  414:                    }else break;
+    %%%%%:  414-block  0
+        -:  415:                }else
+        -:  416:                {
+        1:  417:                    if(etw->filed[k-1][j-1]->owner==owner)
+        1:  417-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1
+        -:  418:                    {
+    #####:  419:                        *a=etw->filed[k-1][j-1]->row;
+    #####:  420:                        *b=etw->filed[k-1][j-1]->col;
+    #####:  421:                        return;
+    %%%%%:  421-block  0
+        1:  422:                    }else if(etw->filed[k-1][j-1]->owner==
+        1:  422-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 0
+        -:  423:                             CHKS_OWNER_NONE)
+        -:  424:                    {
+        1:  425:                        k--;
+        1:  426:                        j--;
+        1:  427:                        continue;
+        1:  427-block  0
+    #####:  428:                    }else break;
+    %%%%%:  428-block  0
+        -:  429:                }
+        -:  430:            }
+       11:  431:            break;
+       11:  431-block  0
+        9:  432:        case 3:
+        9:  433:            k++;
+        9:  434:            j--;
+       11:  435:            while (k<=8 && j>=1)
+        9:  435-block  0
+       11:  435-block  1
+branch  0 taken 11 (fallthrough)
+branch  1 taken 0
+       11:  435-block  2
+branch  2 taken 11
+branch  3 taken 0 (fallthrough)
+        -:  436:            {
+       11:  437:                if(last)
+       11:  437-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 11
+        -:  438:                {
+    #####:  439:                    if(last->view_table->table->filed[k-1][j-1]->owner==owner)
+    %%%%%:  439-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  440:                    {
+    #####:  441:                        *a=last->view_table->table->filed[k-1][j-1]->row;
+    #####:  442:                        *b=last->view_table->table->filed[k-1][j-1]->col;
+    #####:  443:                        return;
+    %%%%%:  443-block  0
+    #####:  444:                    }else if(last->view_table->table->filed[k-1][j-1]->owner==
+    %%%%%:  444-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  445:                             CHKS_OWNER_NONE)
+        -:  446:                    {
+    #####:  447:                        k++;
+    #####:  448:                        j--;
+    #####:  449:                        continue;
+    %%%%%:  449-block  0
+    #####:  450:                    }else break;
+    %%%%%:  450-block  0
+        -:  451:                }else{
+       11:  452:                    if(etw->filed[k-1][j-1]->owner==owner)
+       11:  452-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 10
+        -:  453:                    {
+        1:  454:                        *a=etw->filed[k-1][j-1]->row;
+        1:  455:                        *b=etw->filed[k-1][j-1]->col;
+        1:  456:                        return;
+        1:  456-block  0
+       10:  457:                    }else if(etw->filed[k-1][j-1]->owner==
+       10:  457-block  0
+branch  0 taken 2 (fallthrough)
+branch  1 taken 8
+        -:  458:                             CHKS_OWNER_NONE)
+        -:  459:                    {
+        2:  460:                        k++;
+        2:  461:                        j--;
+        2:  462:                        continue;
+        2:  462-block  0
+        8:  463:                    }else break;
+        8:  463-block  0
+        -:  464:                }
+        -:  465:            }
+        8:  466:            break;
+        8:  466-block  0
+       11:  467:        case 4:
+       11:  468:            k++;
+       11:  469:            j++;
+       12:  470:            while (k<=8 && j<=8)
+       11:  470-block  0
+       12:  470-block  1
+branch  0 taken 12 (fallthrough)
+branch  1 taken 0
+       12:  470-block  2
+branch  2 taken 12
+branch  3 taken 0 (fallthrough)
+        -:  471:            {
+       12:  472:                if(last)
+       12:  472-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 12
+        -:  473:                {
+    #####:  474:                    if(last->view_table->table->filed[k-1][j-1]->owner==owner)
+    %%%%%:  474-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  475:                    {
+    #####:  476:                        *a=last->view_table->table->filed[k-1][j-1]->row;
+    #####:  477:                        *b=last->view_table->table->filed[k-1][j-1]->col;
+    #####:  478:                        return;
+    %%%%%:  478-block  0
+    #####:  479:                    }else if(last->view_table->table->filed[k-1][j-1]->owner==
+    %%%%%:  479-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  480:                             CHKS_OWNER_NONE)
+        -:  481:                    {
+    #####:  482:                        k++;
+    #####:  483:                        j++;
+    #####:  484:                        continue;
+    %%%%%:  484-block  0
+    #####:  485:                    }else break;
+    %%%%%:  485-block  0
+        -:  486:                }else
+        -:  487:                {
+       12:  488:                    if(etw->filed[k-1][j-1]->owner==owner)
+       12:  488-block  0
+branch  0 taken 2 (fallthrough)
+branch  1 taken 10
+        -:  489:                    {
+        2:  490:                        *a=etw->filed[k-1][j-1]->row;
+        2:  491:                        *b=etw->filed[k-1][j-1]->col;
+        2:  492:                        return;
+        2:  492-block  0
+       10:  493:                    }else if(etw->filed[k-1][j-1]->owner==
+       10:  493-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 9
+        -:  494:                             CHKS_OWNER_NONE)
+        -:  495:                    {
+        1:  496:                        k++;
+        1:  497:                        j++;
+        1:  498:                        continue;
+        1:  498-block  0
+        9:  499:                    }else break;
+        9:  499-block  0
+        -:  500:                }
+        -:  501:            }
+        9:  502:            break;
+        9:  502-block  0
+        -:  503:    }
+       37:  504:    if(et==0)
+       37:  504-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 37
+        -:  505:    {
+    #####:  506:        switch (i) {
+    %%%%%:  506-block  0
+branch  0 never executed
+branch  1 never executed
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+    #####:  507:            case 1:
+    #####:  508:                *a=k+1;
+    #####:  509:                *b=j-1;
+    #####:  510:                break;
+    %%%%%:  510-block  0
+    #####:  511:            case 2:
+    #####:  512:                *a=k+1;
+    #####:  513:                *b=j+1;
+    #####:  514:                break;
+    %%%%%:  514-block  0
+    #####:  515:            case 3:
+    #####:  516:                *a=k-1;
+    #####:  517:                *b=j+1;
+    #####:  518:                break;
+    %%%%%:  518-block  0
+    #####:  519:            case 4:
+    #####:  520:                *a=k-1;
+    #####:  521:                *b=j-1;
+    #####:  522:                break;
+    %%%%%:  522-block  0
+        -:  523:        }
+        -:  524:    }else
+        -:  525:    {
+       37:  526:        *a=-1;
+       37:  527:        *b=-1;
+       37:  527-block  0
+        -:  528:    }
+        -:  529:}
+        -:  530:
+function creer_initialiser_cellule called 1319 returned 100% blocks executed 60%
+     1319:  531:cellule *creer_initialiser_cellule(int a,int b,int c,int c1)
+        -:  532:{
+     1319:  533:    cellule *ne=(cellule*)malloc(sizeof (cellule));
+     1319:  534:    if(!ne)
+     1319:  534-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1319
+        -:  535:    {
+    #####:  536:        printf("error allocation");
+    %%%%%:  536-block  0
+call    0 never executed
+    #####:  537:        exit(-1);
+call    0 never executed
+        -:  538:    }
+     1319:  539:    ne->row=a;
+     1319:  540:    ne->col=b;
+     1319:  541:    ne->diag_not_verify=c;
+     1319:  542:    ne->diag_not_verify=c1;
+     1319:  543:    ne->suiv=NULL;
+     1319:  544:    return (cellule*)ne;
+     1319:  544-block  0
+        -:  545:}
+        -:  546:
+function two_consecutif called 0 returned 0% blocks executed 0%
+    #####:  547:int two_consecutif(int row,int col ,ChksField *last,int i,ChksOwner owner)
+        -:  548:{
+    #####:  549:    switch (i) {
+    %%%%%:  549-block  0
+branch  0 never executed
+branch  1 never executed
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+    #####:  550:        case 1:
+    #####:  551:            if(last->view_table->table->filed[row-1][col-1]->owner==owner)
+    %%%%%:  551-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  552:            {
+    #####:  553:                if(((row-1)>=1 )&& ((col+1)<=8))
+    %%%%%:  553-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  553-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  554:                {
+    #####:  555:                    if(last->view_table->table->filed[row-1-1][col+1-1]->owner==owner)return (int)1;
+    %%%%%:  555-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  555-block  1
+    #####:  556:                    else return (int)0;
+    %%%%%:  556-block  0
+    #####:  557:                }else return (int)0;
+    %%%%%:  557-block  0
+        -:  558:
+    #####:  559:            }else return (int)0;
+    %%%%%:  559-block  0
+        -:  560:            break;
+    #####:  561:        case 2:
+    #####:  562:            if(last->view_table->table->filed[row-1][col-1]->owner==owner)
+    %%%%%:  562-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  563:            {
+    #####:  564:                if(((row-1)>=1 )&& ((col-1)>=1))
+    %%%%%:  564-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  564-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  565:                {
+    #####:  566:                    if(last->view_table->table->filed[row-1-1][col-1-1]->owner==owner)return (int)1;
+    %%%%%:  566-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  566-block  1
+    #####:  567:                    else return (int)0;
+    %%%%%:  567-block  0
+    #####:  568:                }else return (int)0;
+    %%%%%:  568-block  0
+        -:  569:
+    #####:  570:            }else return (int)0;
+    %%%%%:  570-block  0
+        -:  571:            break;
+    #####:  572:        case 3:
+    #####:  573:            if(last->view_table->table->filed[row-1][col-1]->owner==owner)
+    %%%%%:  573-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  574:            {
+    #####:  575:                if(((row+1)<=8)&& ((col-1)>=1))
+    %%%%%:  575-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  575-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  576:                {
+    #####:  577:                    if(last->view_table->table->filed[row+1-1][col-1-1]->owner==owner)return (int)1;
+    %%%%%:  577-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  577-block  1
+    #####:  578:                    else return (int)0;
+    %%%%%:  578-block  0
+    #####:  579:                }else return (int)0;
+    %%%%%:  579-block  0
+    #####:  580:            }else return (int)0;
+    %%%%%:  580-block  0
+        -:  581:            break;
+    #####:  582:        case 4:
+    #####:  583:            if(last->view_table->table->filed[row-1][col-1]->owner==owner)
+    %%%%%:  583-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  584:            {
+    #####:  585:                if(((row+1)<=8)&& ((col+1)<=8))
+    %%%%%:  585-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  585-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  586:                {
+    #####:  587:                    if(last->view_table->table->filed[row+1-1][col+1-1]->owner==owner)return (int)1;
+    %%%%%:  587-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  587-block  1
+    #####:  588:                    else return (int)0;
+    %%%%%:  588-block  0
+    #####:  589:                }else return (int)0;
+    %%%%%:  589-block  0
+    #####:  590:            }else return (int)0;
+    %%%%%:  590-block  0
+        -:  591:            break;
+        -:  592:    }
+    #####:  593:}
+    %%%%%:  593-block  0
+        -:  594:
+function two_consecutif2 called 3 returned 100% blocks executed 37%
+        3:  595:int two_consecutif2(int row,int col ,etat_window *etw,int i,ChksOwner owner)
+        -:  596:{
+        3:  597:    switch (i) {
+        3:  597-block  0
+branch  0 taken 0
+branch  1 taken 0
+branch  2 taken 1
+branch  3 taken 2
+branch  4 taken 0
+    #####:  598:        case 1:
+    #####:  599:            if(etw->filed[row-1][col-1]->owner==owner)
+    %%%%%:  599-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  600:            {
+    #####:  601:                if(((row-1)>=1 )&& ((col+1)<=8))
+    %%%%%:  601-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  601-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  602:                {
+    #####:  603:                    if(etw->filed[row-1-1][col+1-1]->owner==owner)return (int)1;
+    %%%%%:  603-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  603-block  1
+    #####:  604:                    else return (int)0;
+    %%%%%:  604-block  0
+    #####:  605:                }else return (int)0;
+    %%%%%:  605-block  0
+        -:  606:
+    #####:  607:            }else return (int)0;
+    %%%%%:  607-block  0
+        -:  608:            break;
+    #####:  609:        case 2:
+    #####:  610:            if(etw->filed[row-1][col-1]->owner==owner)
+    %%%%%:  610-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  611:            {
+    #####:  612:                if(((row-1)>=1 )&& ((col-1)>=1))
+    %%%%%:  612-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  612-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  613:                {
+    #####:  614:                    if(etw->filed[row-1-1][col-1-1]->owner==owner)return (int)1;
+    %%%%%:  614-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  614-block  1
+    #####:  615:                    else return (int)0;
+    %%%%%:  615-block  0
+    #####:  616:                }else return (int)0;
+    %%%%%:  616-block  0
+        -:  617:
+    #####:  618:            }else return (int)0;
+    %%%%%:  618-block  0
+        -:  619:            break;
+        1:  620:        case 3:
+        1:  621:            if(etw->filed[row-1][col-1]->owner==owner)
+        1:  621-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 0
+        -:  622:            {
+        1:  623:                if(((row+1)<=8)&& ((col-1)>=1))
+        1:  623-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 0
+        1:  623-block  1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0
+        -:  624:                {
+       1*:  625:                    if(etw->filed[row+1-1][col-1-1]->owner==owner)return (int)1;
+        1:  625-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1
+    %%%%%:  625-block  1
+        1:  626:                    else return (int)0;
+        1:  626-block  0
+    #####:  627:                }else return (int)0;
+    %%%%%:  627-block  0
+    #####:  628:            }else return (int)0;
+    %%%%%:  628-block  0
+        -:  629:            break;
+        2:  630:        case 4:
+        2:  631:            if(etw->filed[row-1][col-1]->owner==owner)
+        2:  631-block  0
+branch  0 taken 2 (fallthrough)
+branch  1 taken 0
+        -:  632:            {
+        2:  633:                if(((row+1)<=8)&& ((col+1)<=8))
+        2:  633-block  0
+branch  0 taken 2 (fallthrough)
+branch  1 taken 0
+        2:  633-block  1
+branch  2 taken 2 (fallthrough)
+branch  3 taken 0
+        -:  634:                {
+        2:  635:                    if(etw->filed[row+1-1][col+1-1]->owner==owner)return (int)1;
+        2:  635-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 1
+        1:  635-block  1
+        1:  636:                    else return (int)0;
+        1:  636-block  0
+    #####:  637:                }else return (int)0;
+    %%%%%:  637-block  0
+    #####:  638:            }else return (int)0;
+    %%%%%:  638-block  0
+        -:  639:            break;
+        -:  640:    }
+    #####:  641:}
+    %%%%%:  641-block  0
+        -:  642:
+function exist_case_beetwen_one_two called 0 returned 0% blocks executed 0%
+    #####:  643:int exist_case_beetwen_one_two(ChksField *last,ChksField *field,int i,File *f)
+        -:  644:{
+    #####:  645:    int c,d,cpt=0,kk=0;
+    #####:  646:    switch (i) {
+    %%%%%:  646-block  0
+branch  0 never executed
+branch  1 never executed
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+    #####:  647:        case 1:
+    #####:  648:            c=last->row-1;
+    #####:  649:            d=last->col+1;
+    %%%%%:  649-block  0
+        -:  650:            do {
+        -:  651:                //rien a verifier
+    #####:  652:                if(c<1 && d>8)
+    %%%%%:  652-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  652-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  653:                {
+    #####:  654:                    if(kk==0)return (int)-2;
+    %%%%%:  654-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  654-block  1
+    #####:  655:                    else return (int)-3;
+    %%%%%:  655-block  0
+        -:  656:                }
+        -:  657:                //le champs est le correspond
+    #####:  658:                if((field->view_table->table->filed[c-1][d-1]->row==field->row) &&
+    %%%%%:  658-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  659:                   (field->view_table->table->filed[c-1][d-1]->col==field->col) &&
+    %%%%%:  659-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  660:                        (field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_NONE))
+    %%%%%:  660-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  661:                    return (int)1;
+    %%%%%:  661-block  0
+    #####:  662:                else if(field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_TWO && cpt==0)cpt=1;
+    %%%%%:  662-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  662-block  1
+branch  2 never executed
+branch  3 never executed
+    %%%%%:  662-block  2
+    #####:  663:                else if((cpt==1) && (field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_NONE))
+    %%%%%:  663-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  663-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  664:                {
+    #####:  665:                    cellule *ne= creer_initialiser_cellule(c,d,3,i);
+    %%%%%:  665-block  0
+call    0 never executed
+    #####:  666:                    enfiler(f,ne);
+call    0 never executed
+    #####:  667:                    kk++;
+        -:  668:                }
+    #####:  669:                c--;
+    #####:  670:                d++;
+    #####:  671:            } while ((!two_consecutif(c,d,last,i,CHKS_OWNER_TWO))&&(field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_TWO));
+    %%%%%:  671-block  0
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+    %%%%%:  671-block  1
+branch  3 never executed
+branch  4 never executed
+    #####:  672:            if(kk==0)return (int)-2;//on a rien ajouter a la file pour la traiter
+    %%%%%:  672-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  672-block  1
+    #####:  673:            else return (int)-3;
+    %%%%%:  673-block  0
+    #####:  674:        case 2:
+    #####:  675:            c=last->row-1;
+    #####:  676:            d=last->col-1;
+    %%%%%:  676-block  0
+        -:  677:            do {
+        -:  678:                //rien a verifier
+    #####:  679:                if(c<1 && d<1)
+    %%%%%:  679-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  679-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  680:                {
+    #####:  681:                    if(kk==0)return (int)-2;
+    %%%%%:  681-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  681-block  1
+    #####:  682:                    else return (int)-3;
+    %%%%%:  682-block  0
+        -:  683:                }
+        -:  684:                //le champs est le correspond
+    #####:  685:                if((field->view_table->table->filed[c-1][d-1]->row==field->row) &&
+    %%%%%:  685-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  686:                   (field->view_table->table->filed[c-1][d-1]->col==field->col) &&
+    %%%%%:  686-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  687:                   (field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_NONE))
+    %%%%%:  687-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  688:                    return (int)1;
+    %%%%%:  688-block  0
+    #####:  689:                else if(field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_TWO && cpt==0)cpt=1;
+    %%%%%:  689-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  689-block  1
+branch  2 never executed
+branch  3 never executed
+    %%%%%:  689-block  2
+    #####:  690:                else if((cpt==1) && (field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_NONE))
+    %%%%%:  690-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  690-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  691:                {
+    #####:  692:                    cellule *ne= creer_initialiser_cellule(c,d,4,i);
+    %%%%%:  692-block  0
+call    0 never executed
+    #####:  693:                    enfiler(f,ne);
+call    0 never executed
+    #####:  694:                    kk++;
+        -:  695:                }
+    #####:  696:                c--;
+    #####:  697:                d--;
+    #####:  698:            } while ((!two_consecutif(c,d,last,i,CHKS_OWNER_TWO))&&(field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_TWO));
+    %%%%%:  698-block  0
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+    %%%%%:  698-block  1
+branch  3 never executed
+branch  4 never executed
+    #####:  699:            if(kk==0)return (int)-2;//on a rien ajouter a la file pour la traiter
+    %%%%%:  699-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  699-block  1
+    #####:  700:            else return (int)-3;
+    %%%%%:  700-block  0
+    #####:  701:        case 3:
+    #####:  702:            c=last->row+1;
+    #####:  703:            d=last->col-1;
+    %%%%%:  703-block  0
+        -:  704:            do {
+        -:  705:                //rien a verifier
+    #####:  706:                if(c>8 && d<1)
+    %%%%%:  706-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  706-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  707:                {
+    #####:  708:                    if(kk==0)return (int)-2;
+    %%%%%:  708-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  708-block  1
+    #####:  709:                    else return (int)-3;
+    %%%%%:  709-block  0
+        -:  710:                }
+        -:  711:                //le champs est le correspond
+    #####:  712:                if((field->view_table->table->filed[c-1][d-1]->row==field->row) &&
+    %%%%%:  712-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  713:                   (field->view_table->table->filed[c-1][d-1]->col==field->col) &&
+    %%%%%:  713-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  714:                   (field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_NONE))
+    %%%%%:  714-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  715:                    return (int)1;
+    %%%%%:  715-block  0
+    #####:  716:                else if(field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_TWO && cpt==0)cpt=1;
+    %%%%%:  716-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  716-block  1
+branch  2 never executed
+branch  3 never executed
+    %%%%%:  716-block  2
+    #####:  717:                else if((cpt==1) && (field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_NONE))
+    %%%%%:  717-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  717-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  718:                {
+    #####:  719:                    cellule *ne= creer_initialiser_cellule(c,d,1,i);
+    %%%%%:  719-block  0
+call    0 never executed
+    #####:  720:                    enfiler(f,ne);
+call    0 never executed
+    #####:  721:                    kk++;
+        -:  722:                }
+    #####:  723:                c++;
+    #####:  724:                d--;
+    #####:  725:            } while ((!two_consecutif(c,d,last,i,CHKS_OWNER_TWO))&&(field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_TWO));
+    %%%%%:  725-block  0
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+    %%%%%:  725-block  1
+branch  3 never executed
+branch  4 never executed
+    #####:  726:            if(kk==0)return (int)-2;//on a rien ajouter a la file pour la traiter
+    %%%%%:  726-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  726-block  1
+    #####:  727:            else return (int)-3;
+    %%%%%:  727-block  0
+    #####:  728:        case 4:
+    #####:  729:            c=last->row+1;
+    #####:  730:            d=last->col+1;
+    %%%%%:  730-block  0
+        -:  731:            do {
+        -:  732:                //rien a verifier
+    #####:  733:                if(c>8 && d>8){
+    %%%%%:  733-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  733-block  1
+branch  2 never executed
+branch  3 never executed
+    #####:  734:                    if(kk==0)return (int)-2;
+    %%%%%:  734-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  734-block  1
+    #####:  735:                    else return (int)-3;
+    %%%%%:  735-block  0
+        -:  736:                }
+        -:  737:                //le champs est le correspond
+    #####:  738:                if((field->view_table->table->filed[c-1][d-1]->row==field->row) &&
+    %%%%%:  738-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  739:                   (field->view_table->table->filed[c-1][d-1]->col==field->col) &&
+    %%%%%:  739-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  740:                   (field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_NONE))
+    %%%%%:  740-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  741:                    return (int)1;
+    %%%%%:  741-block  0
+    #####:  742:                else if(field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_TWO && cpt==0)cpt=1;
+    %%%%%:  742-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  742-block  1
+branch  2 never executed
+branch  3 never executed
+    %%%%%:  742-block  2
+    #####:  743:                else if((cpt==1) && (field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_NONE))
+    %%%%%:  743-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  743-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  744:                {
+    #####:  745:                    cellule *ne= creer_initialiser_cellule(c,d,2,i);
+    %%%%%:  745-block  0
+call    0 never executed
+    #####:  746:                    enfiler(f,ne);
+call    0 never executed
+    #####:  747:                    kk++;
+        -:  748:                }
+    #####:  749:                c++;
+    #####:  750:                d++;
+    #####:  751:            } while ((!two_consecutif(c,d,last,i,CHKS_OWNER_TWO))&&(field->view_table->table->filed[c-1][d-1]->owner==CHKS_OWNER_TWO));
+    %%%%%:  751-block  0
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+    %%%%%:  751-block  1
+branch  3 never executed
+branch  4 never executed
+    #####:  752:            if(kk==0)return (int)-2;//on a rien ajouter a la file pour la traiter
+    %%%%%:  752-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  752-block  1
+    #####:  753:            else return (int)-3;
+    %%%%%:  753-block  0
+        -:  754:    }
+    #####:  755:}
+    %%%%%:  755-block  0
+        -:  756:
+        -:  757:
+function techek_entred_piece called 46 returned 100% blocks executed 26%
+       46:  758:int techek_entred_piece(ChksField *filed,ChksField *last,File *f1)
+        -:  759:{
+       46:  760:    int i,er=0,m,c,d;
+        -:  761:    ChksField *ff;
+        -:  762:    //si le champ survoler est different de none rien faire
+      46*:  763:    if(filed->owner==CHKS_OWNER_TWO || filed->owner==CHKS_OWNER_ONE)return (int)0;
+       46:  763-block  0
+branch  0 taken 46 (fallthrough)
+branch  1 taken 0
+       46:  763-block  1
+branch  2 taken 0 (fallthrough)
+branch  3 taken 46
+    %%%%%:  763-block  2
+        -:  764:    //si le diagonal en bas a gauche et a droite contient piece de l'utilisateur
+       46:  765:    if(last->row+1<=8 && last->col-1>=1 && last->col+1<=8)
+       46:  765-block  0
+branch  0 taken 46 (fallthrough)
+branch  1 taken 0
+       46:  765-block  1
+branch  2 taken 44 (fallthrough)
+branch  3 taken 2
+       44:  765-block  2
+branch  4 taken 42 (fallthrough)
+branch  5 taken 2
+        -:  766:    {
+       42:  767:        if(last->view_table->table->filed[last->row+1-1][last->col-1-1]->owner==CHKS_OWNER_ONE &&
+       42:  767-block  0
+branch  0 taken 8 (fallthrough)
+branch  1 taken 34
+        8:  768:           last->view_table->table->filed[last->row+1-1][last->col+1-1]->owner==CHKS_OWNER_ONE)
+        8:  768-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 8
+    #####:  769:            return (int)0;
+    %%%%%:  769-block  0
+        -:  770:    }
+       46:  771:    if(!last->is_queen)
+       46:  771-block  0
+branch  0 taken 46 (fallthrough)
+branch  1 taken 0
+        -:  772:    {
+       46:  773:        if(filed->row==last->row+1 && filed->col==last->col+1)return (int)1;
+       46:  773-block  0
+branch  0 taken 42 (fallthrough)
+branch  1 taken 4
+       42:  773-block  1
+branch  2 taken 19 (fallthrough)
+branch  3 taken 23
+       19:  773-block  2
+       27:  774:        if(filed->row==last->row+1 && filed->col==last->col-1)return (int)1;
+       27:  774-block  0
+branch  0 taken 23 (fallthrough)
+branch  1 taken 4
+       23:  774-block  1
+branch  2 taken 22 (fallthrough)
+branch  3 taken 1
+       22:  774-block  2
+        5:  775:        return (int)verify_for_not_queen(filed,last,last->row,last->col,f1);
+        5:  775-block  0
+call    0 returned 5
+        -:  776:    }else{//verification pour queen
+        -:  777:        /*
+        -:  778:        * j'ai trouvé 4 champs one
+        -:  779:        * il ne peut pas ce deplacer
+        -:  780:        */
+    #####:  781:        if(first_is_one_four(last))return (int)0;
+    %%%%%:  781-block  0
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+    %%%%%:  781-block  1
+    #####:  782:        File *f=creer_initaliser_file();
+    %%%%%:  782-block  0
+call    0 never executed
+    #####:  783:        if(est_vide_file(f))
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+        -:  784:        {
+    #####:  785:           for(i=1;i<=4;i++)
+    %%%%%:  785-block  0
+    %%%%%:  785-block  1
+    %%%%%:  785-block  2
+branch  0 never executed
+branch  1 never executed
+        -:  786:           {
+        -:  787:               //Dans cette direction field one ne peut pas ce deplacer
+    #####:  788:               if(first_is_one(last,i))
+    %%%%%:  788-block  0
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+        -:  789:               {
+    #####:  790:                   er++;//on a rien inserer dans la file
+    #####:  791:                   continue;
+    %%%%%:  791-block  0
+        -:  792:               }
+        -:  793:               //verifier si il existe l'adversaire dans cette direction
+    #####:  794:               first_one_or_two(last,&c,&d,i,CHKS_OWNER_TWO,1,NULL,-1,-1);
+    %%%%%:  794-block  0
+call    0 never executed
+    #####:  795:               if((c==-1)&&(d==-1))er++;//il n'as pas trouvé two et on a rien inserer dans la file
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  795-block  0
+branch  2 never executed
+branch  3 never executed
+    %%%%%:  795-block  1
+        -:  796:               else
+        -:  797:               {
+    #####:  798:                   m=exist_case_beetwen_one_two(last,filed,i,f);
+    %%%%%:  798-block  0
+call    0 never executed
+    #####:  799:                   if(m==-2)er++;
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  799-block  0
+    #####:  800:                   else if(m==1)return (int)1;
+    %%%%%:  800-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  800-block  1
+        -:  801:               }
+        -:  802:           }
+        -:  803:        }
+    #####:  804:        if(er==4)return (int)0;/*il n'a pas trouvé et il n'existe pas une case beetwen last machine field
+    %%%%%:  804-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  804-block  1
+        -:  805:         and first one field   */
+    #####:  806:        while (!est_vide_file(f))
+    %%%%%:  806-block  0
+    %%%%%:  806-block  1
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+        -:  807:        {
+    #####:  808:            if(f1)
+    %%%%%:  808-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  809:            {
+    #####:  810:                if(f->tete->row==f1->tete->row &&
+    %%%%%:  810-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  811:                   f->tete->col==f1->tete->col)
+    %%%%%:  811-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  812:                    defiler(f1);
+    %%%%%:  812-block  0
+call    0 never executed
+        -:  813:            }
+    #####:  814:            for(i=1;i<=4;i++)
+    %%%%%:  814-block  0
+    %%%%%:  814-block  1
+    %%%%%:  814-block  2
+branch  0 never executed
+branch  1 never executed
+        -:  815:            {
+    #####:  816:                if(i!=f->tete->diag_not_verify && i!=f->tete->diag_not_verify2)
+    %%%%%:  816-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  816-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  817:                {
+    #####:  818:                    ff=last->view_table->table->filed[f->tete->row-1][f->tete->col-1];
+    #####:  819:                    first_one_or_two(ff,&c,&d,i,CHKS_OWNER_TWO,1,NULL,-1,-1);
+    %%%%%:  819-block  0
+call    0 never executed
+    #####:  820:                    if((c==-1)&&(d==-1))continue;
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  820-block  0
+branch  2 never executed
+branch  3 never executed
+    %%%%%:  820-block  1
+    #####:  821:                    switch (i) {
+    %%%%%:  821-block  0
+branch  0 never executed
+branch  1 never executed
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+    #####:  822:                        case 1:
+    #####:  823:                            ff=last->view_table->table->filed[c+1-1][d-1-1];
+    #####:  824:                            break;
+    %%%%%:  824-block  0
+    #####:  825:                        case 2:
+    #####:  826:                            ff=last->view_table->table->filed[c+1-1][d+1-1];
+    #####:  827:                            break;
+    %%%%%:  827-block  0
+    #####:  828:                        case 3:
+    #####:  829:                            ff=last->view_table->table->filed[c-1-1][d+1-1];
+    #####:  830:                            break;
+    %%%%%:  830-block  0
+    #####:  831:                        case 4:
+    #####:  832:                            ff=last->view_table->table->filed[c-1-1][d-1-1];
+    #####:  833:                            break;
+    %%%%%:  833-block  0
+        -:  834:                    }
+    #####:  835:                    m=exist_case_beetwen_one_two(ff,filed,i,f);
+    %%%%%:  835-block  0
+call    0 never executed
+    #####:  836:                    if(m==1)return (int)1;//field trouvé
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  836-block  0
+        -:  837:                }
+        -:  838:            }
+    #####:  839:            defiler(f);
+    %%%%%:  839-block  0
+call    0 never executed
+        -:  840:        }
+    #####:  841:        return (int)0;
+    %%%%%:  841-block  0
+        -:  842:    }
+        -:  843:}
+        -:  844:
+function piece_entered called 93 returned 100% blocks executed 84%
+       93:  845:void piece_entered(GtkWidget *button,ChksField *field)
+        -:  846:{
+       93:  847:    if(!field->view_table->table->last)return;
+       93:  847-block  0
+branch  0 taken 61 (fallthrough)
+branch  1 taken 32
+       61:  847-block  1
+       32:  848:    if(field->owner != CHKS_OWNER_NONE)return;
+       32:  848-block  0
+branch  0 taken 4 (fallthrough)
+branch  1 taken 28
+        4:  848-block  1
+       28:  849:    if(techek_entred_piece(field,field->view_table->table->last,NULL))
+       28:  849-block  0
+call    0 returned 28
+branch  1 taken 23 (fallthrough)
+branch  2 taken 5
+        -:  850:    {
+       23:  851:        GtkStyleContext* context = gtk_widget_get_style_context(button);
+       23:  851-block  0
+call    0 returned 23
+       23:  852:        GtkCssProvider* provider = gtk_css_provider_new();
+call    0 returned 23
+       23:  853:        gtk_css_provider_load_from_path(provider, "C:\\Users\\USER\\Desktop\\GTK\\Dame_game\\test.css", NULL);
+call    0 returned 23
+       23:  854:        switch (field->view_table->table->last->owner) {
+branch  0 taken 23
+branch  1 taken 0
+branch  2 taken 0
+        -:  855:
+       23:  856:            case CHKS_OWNER_ONE:
+       23:  857:                gtk_style_context_add_class(GTK_STYLE_CONTEXT(context),"chks-player-one-pre");
+       23:  857-block  0
+call    0 returned 23
+call    1 returned 23
+       23:  858:                break;
+    #####:  859:            case CHKS_OWNER_TWO:
+    #####:  860:                gtk_style_context_add_class(GTK_STYLE_CONTEXT(context),"chks-player-two-pre");
+    %%%%%:  860-block  0
+call    0 never executed
+call    1 never executed
+    #####:  861:                break;
+        -:  862:        }
+       23:  863:        gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+       23:  863-block  0
+call    0 returned 23
+call    1 returned 23
+        -:  864:    }
+        -:  865:}
+        -:  866:
+function vider_file called 20 returned 100% blocks executed 75%
+       20:  867:int vider_file(File *f)
+        -:  868:{
+      20*:  869:    if(!f)return (int)-1;
+       20:  869-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 20
+    %%%%%:  869-block  1
+       20:  870:    f->tete=NULL;
+       20:  871:    f->queue=NULL;
+       20:  872:    return (int)1;
+       20:  872-block  0
+        -:  873:}
+        -:  874:
+        -:  875:
+function piece_cliecked called 42 returned 100% blocks executed 86%
+       42:  876:void piece_cliecked(GtkWidget *button, ChksField *fieled)
+        -:  877:{
+       42:  878:    if(fieled->view_table->user->nbr_piece_disp==0 ||
+       42:  878-block  0
+branch  0 taken 42 (fallthrough)
+branch  1 taken 0
+       42:  879:    fieled->view_table->machine->nbr_piece_disp==0)
+       42:  879-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 42
+    #####:  880:        return;//l'un des deux joueur a gagné
+    %%%%%:  880-block  0
+      42*:  881:    if(fieled->owner==CHKS_OWNER_TWO)return;//on peut pas jouer avec les pieces de la machine
+       42:  881-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 42
+    %%%%%:  881-block  1
+       42:  882:    if(fieled->view_table->table->last)
+       42:  882-block  0
+branch  0 taken 24 (fallthrough)
+branch  1 taken 18
+        -:  883:    {
+       24:  884:        if(fieled->owner==CHKS_OWNER_ONE)
+       24:  884-block  0
+branch  0 taken 3 (fallthrough)
+branch  1 taken 21
+        -:  885:        {
+        3:  886:            vider_file(fieled->view_table->g->f);
+        3:  886-block  0
+call    0 returned 3
+        3:  887:            fieled->view_table->table->last=fieled;
+        3:  888:            return;
+        -:  889:        }
+        -:  890:        //field NONE
+       21:  891:        cellule *ne= creer_initialiser_cellule(fieled->row,
+       21:  891-block  0
+call    0 returned 21
+        -:  892:                                               fieled->col,-1,-1);
+       21:  893:        enfiler(fieled->view_table->g->f,ne);
+call    0 returned 21
+       21:  894:        fieled->view_table->g->field=fieled;//le dernier None clicker
+       18:  895:    }else fieled->view_table->table->last=fieled;
+       18:  895-block  0
+        -:  896:}
+        -:  897:
+function piece_leaved called 92 returned 100% blocks executed 100%
+       92:  898:void piece_leaved(GtkWidget *button,ChksField *field)
+        -:  899:{
+        -:  900:    GtkStyleContext* context;
+       92:  901:    context = gtk_widget_get_style_context(button);
+       92:  901-block  0
+call    0 returned 92
+       92:  902:    gtk_style_context_remove_class(context, "chks-player-one-pre");
+call    0 returned 92
+       92:  903:    gtk_style_context_remove_class(context, "chks-player-two-pre");
+call    0 returned 92
+       92:  904:}
+        -:  905:
+function copy_file called 0 returned 0% blocks executed 0%
+    #####:  906:int copy_file(File *sourceF, File *destF)
+        -:  907:{
+    #####:  908:    File *tmp=creer_initaliser_file();
+    %%%%%:  908-block  0
+call    0 never executed
+    #####:  909:    if(!sourceF)return (int)0;
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  909-block  0
+    #####:  910:    while (!est_vide_file(sourceF))
+    %%%%%:  910-block  0
+    %%%%%:  910-block  1
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+        -:  911:    {
+    #####:  912:        cellule *ne= creer_initialiser_cellule(sourceF->tete->row,sourceF->tete->col,-1,-1);
+    %%%%%:  912-block  0
+call    0 never executed
+    #####:  913:        enfiler(destF,ne);
+call    0 never executed
+    #####:  914:        enfiler(tmp,ne);
+call    0 never executed
+    #####:  915:        defiler(sourceF);
+call    0 never executed
+        -:  916:    }
+    #####:  917:    while (!est_vide_file(tmp))
+    %%%%%:  917-block  0
+    %%%%%:  917-block  1
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+        -:  918:    {
+    #####:  919:        cellule *ne= creer_initialiser_cellule(tmp->tete->row,tmp->tete->col,-1,-1);
+    %%%%%:  919-block  0
+call    0 never executed
+    #####:  920:        enfiler(sourceF,ne);
+call    0 never executed
+    #####:  921:        defiler(tmp);
+call    0 never executed
+        -:  922:    }
+    #####:  923:    return (int)1;
+    %%%%%:  923-block  0
+        -:  924:}
+        -:  925:
+        -:  926:
+function inserer_fin_liste called 958 returned 100% blocks executed 60%
+      958:  927:cellule2 *inserer_fin_liste(cellule2 *liste,int score,int row,int col)
+        -:  928:{
+      958:  929:    cellule2 *ne= crrer_initailiser_ccellule2(score,row,col);
+      958:  929-block  0
+call    0 returned 958
+      958:  930:    if(!liste)return (cellule2*)ne;
+branch  0 taken 769 (fallthrough)
+branch  1 taken 189
+      769:  930-block  0
+      189:  931:    if(!liste->suiv)
+      189:  931-block  0
+branch  0 taken 189 (fallthrough)
+branch  1 taken 0
+        -:  932:    {
+      189:  933:        liste->suiv=ne;
+      189:  934:        return (cellule2*)liste;
+      189:  934-block  0
+        -:  935:    }
+        -:  936:    cellule2 *p,*q;
+    #####:  937:    p=liste;
+    #####:  938:    q=liste;
+    #####:  939:    while (p)
+    %%%%%:  939-block  0
+    %%%%%:  939-block  1
+branch  0 never executed
+branch  1 never executed
+        -:  940:    {
+    #####:  941:        q=p;
+    #####:  942:        p=p->suiv;
+    %%%%%:  942-block  0
+        -:  943:    }
+    #####:  944:    q->suiv=ne;
+    #####:  945:    return (cellule2*)liste;
+    %%%%%:  945-block  0
+        -:  946:}
+        -:  947:
+function inserer_fin_liste_cellule2 called 3 returned 100% blocks executed 60%
+        3:  948:cellule2 *inserer_fin_liste_cellule2(cellule2 *liste,int score,int row,int col)
+        -:  949:{
+        3:  950:    cellule2 *ne= crrer_initailiser_ccellule2 (score,row,col);
+        3:  950-block  0
+call    0 returned 3
+        3:  951:    if(!liste)return (cellule2 *)ne;
+branch  0 taken 2 (fallthrough)
+branch  1 taken 1
+        2:  951-block  0
+        1:  952:    if(!liste->suiv)
+        1:  952-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 0
+        -:  953:    {
+        1:  954:        liste->suiv=ne;
+        1:  955:        return (cellule2 *)liste;
+        1:  955-block  0
+        -:  956:    }
+        -:  957:    cellule2 *p,*q;
+    #####:  958:    p=liste;
+    #####:  959:    q=liste;
+    #####:  960:    while (p)
+    %%%%%:  960-block  0
+    %%%%%:  960-block  1
+branch  0 never executed
+branch  1 never executed
+        -:  961:    {
+    #####:  962:        q=p;
+    #####:  963:        p=p->suiv;
+    %%%%%:  963-block  0
+        -:  964:    }
+    #####:  965:    q->suiv=ne;
+    #####:  966:    return (cellule2 *)liste;
+    %%%%%:  966-block  0
+        -:  967:}
+        -:  968:
+        -:  969:
+function construire_arbre1 called 216 returned 100% blocks executed 100%
+      216:  970:cellule2 *construire_arbre1(etat_window *etw,cellule2 *ar,int row,int col)//machine
+        -:  971:{
+      216:  972:    if((row-1-1>=0) && (col+1-1<=7 ) && (row-2-1>=0) && (col+2-1<=7))
+      216:  972-block  0
+branch  0 taken 215 (fallthrough)
+branch  1 taken 1
+      215:  972-block  1
+branch  2 taken 194 (fallthrough)
+branch  3 taken 21
+      194:  972-block  2
+branch  4 taken 174 (fallthrough)
+branch  5 taken 20
+      174:  972-block  3
+branch  6 taken 158 (fallthrough)
+branch  7 taken 16
+        -:  973:    {
+      158:  974:        if((etw->filed[row-1-1][col+1-1]->owner==CHKS_OWNER_ONE) &&
+      158:  974-block  0
+branch  0 taken 15 (fallthrough)
+branch  1 taken 143
+       15:  975:           (etw->filed[row-2-1][col+2-1]->owner==CHKS_OWNER_NONE))
+       15:  975-block  0
+branch  0 taken 3 (fallthrough)
+branch  1 taken 12
+        -:  976:        {
+        3:  977:            cellule2 *ne= crrer_initailiser_ccellule2(0,row-2,col+2);
+        3:  977-block  0
+call    0 returned 3
+        3:  978:            ar->topright=construire_arbre1(etw,ne,row-2,col+2);
+call    0 returned 3
+        -:  979:        }
+        -:  980:    }
+      216:  981:    if((row-1-1>=0) && (col-1-1>=0 ) && (row-2-1>=0) && (col-2-1>=0))
+      216:  981-block  0
+branch  0 taken 215 (fallthrough)
+branch  1 taken 1
+      215:  981-block  1
+branch  2 taken 178 (fallthrough)
+branch  3 taken 37
+      178:  981-block  2
+branch  4 taken 169 (fallthrough)
+branch  5 taken 9
+      169:  981-block  3
+branch  6 taken 151 (fallthrough)
+branch  7 taken 18
+        -:  982:    {
+      151:  983:        if((etw->filed[row-1-1][col-1-1]->owner==CHKS_OWNER_ONE) &&
+      151:  983-block  0
+branch  0 taken 15 (fallthrough)
+branch  1 taken 136
+       15:  984:           (etw->filed[row-2-1][col-2-1]->owner==CHKS_OWNER_NONE))
+       15:  984-block  0
+branch  0 taken 6 (fallthrough)
+branch  1 taken 9
+        -:  985:        {
+        6:  986:            cellule2 *ne= crrer_initailiser_ccellule2(0,row-2,col-2);
+        6:  986-block  0
+call    0 returned 6
+        6:  987:            ar->topleft=construire_arbre1(etw,ne,row-2,col-2);
+call    0 returned 6
+        -:  988:        }
+        -:  989:    }
+      216:  990:    return (cellule2*)ar;
+      216:  990-block  0
+        -:  991:}
+        -:  992:
+function construire_arbre2 called 1309 returned 100% blocks executed 100%
+     1309:  993:cellule2 *construire_arbre2(etat_window *etw,cellule2 *ar,int row,int col)//user
+        -:  994:{
+        -:  995:
+     1309:  996:    if((row+1-1<=7) && (col+1-1<=7 ) && (row+2-1<=7) && (col+2-1<=7))
+     1309:  996-block  0
+branch  0 taken 1299 (fallthrough)
+branch  1 taken 10
+     1299:  996-block  1
+branch  2 taken 998 (fallthrough)
+branch  3 taken 301
+      998:  996-block  2
+branch  4 taken 985 (fallthrough)
+branch  5 taken 13
+      985:  996-block  3
+branch  6 taken 851 (fallthrough)
+branch  7 taken 134
+        -:  997:    {
+      851:  998:        if((etw->filed[row+1-1][col+1-1]->owner==CHKS_OWNER_TWO) &&
+      851:  998-block  0
+branch  0 taken 192 (fallthrough)
+branch  1 taken 659
+      192:  999:           (etw->filed[row+2-1][col+2-1]->owner==CHKS_OWNER_NONE))
+      192:  999-block  0
+branch  0 taken 72 (fallthrough)
+branch  1 taken 120
+        -: 1000:        {
+       72: 1001:            cellule2 *ne= crrer_initailiser_ccellule2(0,row+2,col+2);
+       72: 1001-block  0
+call    0 returned 72
+       72: 1002:            ar->topright=construire_arbre2(etw,ne,row+2,col+2);
+call    0 returned 72
+        -: 1003:        }
+        -: 1004:    }
+     1309: 1005:    if((row+1-1<=7) && (col-1-1>=0 ) && (row+2-1<=7) && (col-2-1>=0))
+     1309: 1005-block  0
+branch  0 taken 1299 (fallthrough)
+branch  1 taken 10
+     1299: 1005-block  1
+branch  2 taken 1253 (fallthrough)
+branch  3 taken 46
+     1253: 1005-block  2
+branch  4 taken 1228 (fallthrough)
+branch  5 taken 25
+     1228: 1005-block  3
+branch  6 taken 1116 (fallthrough)
+branch  7 taken 112
+        -: 1006:    {
+     1116: 1007:        if((etw->filed[row+1-1][col-1-1]->owner==CHKS_OWNER_TWO) &&
+     1116: 1007-block  0
+branch  0 taken 195 (fallthrough)
+branch  1 taken 921
+      195: 1008:           (etw->filed[row+2-1][col-2-1]->owner==CHKS_OWNER_NONE))
+      195: 1008-block  0
+branch  0 taken 97 (fallthrough)
+branch  1 taken 98
+        -: 1009:        {
+       97: 1010:            cellule2 *ne= crrer_initailiser_ccellule2(0,row+2,col-2);
+       97: 1010-block  0
+call    0 returned 97
+       97: 1011:            ar->topleft=construire_arbre2(etw,ne,row+2,col-2);
+call    0 returned 97
+        -: 1012:        }
+        -: 1013:    }
+     1309: 1014:    return (cellule2*)ar;
+     1309: 1014-block  0
+        -: 1015:}
+        -: 1016:
+        -: 1017:
+        -: 1018:
+function add_none_first called 36 returned 100% blocks executed 71%
+       36: 1019:cellule2 *add_none_first(cellule2 *list,int i,etat_window *etw,int row,int col)
+        -: 1020:{
+        -: 1021:
+       36: 1022:    switch (i) {
+       36: 1022-block  0
+branch  0 taken 9
+branch  1 taken 9
+branch  2 taken 9
+branch  3 taken 9
+branch  4 taken 0
+        9: 1023:        case 1:
+        9: 1024:            row=row-1;
+        9: 1025:            col=col+1;
+       9*: 1026:            while (row>=1 &&col<=8)
+        9: 1026-block  0
+        9: 1026-block  1
+branch  0 taken 0 (fallthrough)
+branch  1 taken 9
+    %%%%%: 1026-block  2
+branch  2 never executed
+branch  3 never executed
+        -: 1027:            {
+    #####: 1028:                if(etw->filed[row-1][col-1]->owner==CHKS_OWNER_NONE)
+    %%%%%: 1028-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1029:                {
+    #####: 1030:                    list=inserer_fin_liste_cellule2(list,0,row,col);
+    %%%%%: 1030-block  0
+call    0 never executed
+    #####: 1031:                    row--;
+    #####: 1032:                    col++;
+    #####: 1033:                }else break;
+    %%%%%: 1033-block  0
+        -: 1034:            }
+        9: 1035:            break;
+        9: 1035-block  0
+        9: 1036:        case 2:
+        9: 1037:            row=row-1;
+        9: 1038:            col=col-1;
+       9*: 1039:            while (row>=1 &&col>=1)
+        9: 1039-block  0
+        9: 1039-block  1
+branch  0 taken 0 (fallthrough)
+branch  1 taken 9
+    %%%%%: 1039-block  2
+branch  2 never executed
+branch  3 never executed
+        -: 1040:            {
+    #####: 1041:                if(etw->filed[row-1][col-1]->owner==CHKS_OWNER_NONE)
+    %%%%%: 1041-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1042:                {
+    #####: 1043:                    list=inserer_fin_liste_cellule2(list,0,row,col);
+    %%%%%: 1043-block  0
+call    0 never executed
+    #####: 1044:                    row--;
+    #####: 1045:                    col--;
+    #####: 1046:                }else break;
+    %%%%%: 1046-block  0
+        -: 1047:            }
+        9: 1048:            break;
+        9: 1048-block  0
+        -: 1049:
+        9: 1050:        case 3:
+        9: 1051:            row=row+1;
+        9: 1052:            col=col-1;
+       11: 1053:            while (row<=8 &&col>=1)
+        9: 1053-block  0
+       11: 1053-block  1
+branch  0 taken 11 (fallthrough)
+branch  1 taken 0
+       11: 1053-block  2
+branch  2 taken 11
+branch  3 taken 0 (fallthrough)
+        -: 1054:            {
+       11: 1055:                if(etw->filed[row-1][col-1]->owner==CHKS_OWNER_NONE)
+       11: 1055-block  0
+branch  0 taken 2 (fallthrough)
+branch  1 taken 9
+        -: 1056:                {
+        2: 1057:                    list=inserer_fin_liste_cellule2(list,0,row,col);
+        2: 1057-block  0
+call    0 returned 2
+        2: 1058:                    row++;
+        2: 1059:                    col--;
+        9: 1060:                }else break;
+        9: 1060-block  0
+        -: 1061:            }
+        9: 1062:            break;
+        9: 1062-block  0
+        9: 1063:        case 4:
+        9: 1064:            row=row+1;
+        9: 1065:            col=col+1;
+       10: 1066:            while (row<=8 &&col<=8)
+        9: 1066-block  0
+       10: 1066-block  1
+branch  0 taken 10 (fallthrough)
+branch  1 taken 0
+       10: 1066-block  2
+branch  2 taken 10
+branch  3 taken 0 (fallthrough)
+        -: 1067:            {
+       10: 1068:                if(etw->filed[row-1][col-1]->owner==CHKS_OWNER_NONE)
+       10: 1068-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 9
+        -: 1069:                {
+        1: 1070:                    list=inserer_fin_liste_cellule2(list,0,row,col);
+        1: 1070-block  0
+call    0 returned 1
+        1: 1071:                    row++;
+        1: 1072:                    col++;
+        9: 1073:                }else break;
+        9: 1073-block  0
+        -: 1074:            }
+        9: 1075:            break;
+        9: 1075-block  0
+        -: 1076:    }
+       36: 1077:    return (cellule2*)list;
+       36: 1077-block  0
+        -: 1078:}
+        -: 1079:
+        -: 1080:
+function inserer_debut called 5 returned 100% blocks executed 100%
+        5: 1081:cellule2 *inserer_debut(cellule2 *list,cellule2 *ne)
+        -: 1082:{
+        5: 1083:    if(!list)return (cellule2*)ne;
+        5: 1083-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 4
+        1: 1083-block  1
+        4: 1084:    ne->suiv=list;
+        4: 1085:    list=ne;
+        4: 1086:    return (cellule2*)list;
+        4: 1086-block  0
+        -: 1087:}
+        -: 1088:
+function construire_arbre_queen called 0 returned 0% blocks executed 0%
+    #####: 1089:cellule2 *construire_arbre_queen(ChksField *field,cellule2 *list,int onerow,int onecol,int i)
+        -: 1090:{
+        -: 1091:    int c,d,k,l;
+    #####: 1092:    cellule2 *kk=NULL;
+        -: 1093:    int onerow1,onecol1,tworow1,twocol1;
+    #####: 1094:    ChksField *ff=field->view_table->table->filed[onerow-1][onecol-1];
+    #####: 1095:    if(i!=4)//for 2
+    %%%%%: 1095-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1096:    {
+    #####: 1097:        first_one_or_two(ff,&c,&d,2,CHKS_OWNER_ONE,1,NULL,-1,-1);
+    %%%%%: 1097-block  0
+call    0 never executed
+    #####: 1098:        if(c!=-1 && d!=-1)
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1098-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1099:        {
+    #####: 1100:            first_one_or_two(ff,&k,&l,2,CHKS_OWNER_TWO,0,NULL,-1,-1);
+    %%%%%: 1100-block  0
+call    0 never executed
+    #####: 1101:            onerow1=c-1;
+    #####: 1102:            onecol1=d-1;
+    #####: 1103:            tworow1=k+1;
+    #####: 1104:            twocol1=l+1;
+    #####: 1105:            while (onerow1>=tworow1 && onecol1 >=twocol1)
+    %%%%%: 1105-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1105-block  1
+branch  2 never executed
+branch  3 never executed
+        -: 1106:            {
+    #####: 1107:                if(field->view_table->table->filed[onerow1-1][onecol1-1]->owner==CHKS_OWNER_NONE)
+    %%%%%: 1107-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1108:                {
+    #####: 1109:                    kk=construire_arbre_queen(field,list->topleft,onerow1,onecol1,4);
+    %%%%%: 1109-block  0
+call    0 never executed
+    #####: 1110:                    list->topleft= inserer_debut(list->topleft,kk);
+call    0 never executed
+        -: 1111:                }
+    #####: 1112:                onerow1--;
+    #####: 1113:                onecol1--;
+    %%%%%: 1113-block  0
+        -: 1114:            }
+        -: 1115:        }
+        -: 1116:    }
+    #####: 1117:    if(i!=2)//for 4
+    %%%%%: 1117-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1118:    {
+    #####: 1119:        first_one_or_two(ff,&c,&d,4,CHKS_OWNER_ONE,1,NULL,-1,-1);
+    %%%%%: 1119-block  0
+call    0 never executed
+    #####: 1120:        if(c!=-1 && d!=-1)
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1120-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1121:        {
+    #####: 1122:            first_one_or_two(ff,&k,&l,4,CHKS_OWNER_TWO,0,NULL,-1,-1);
+    %%%%%: 1122-block  0
+call    0 never executed
+    #####: 1123:            onerow1=c+1;
+    #####: 1124:            onecol1=d+1;
+    #####: 1125:            tworow1=k-1;
+    #####: 1126:            twocol1=l-1;
+    #####: 1127:            while (onerow1<=tworow1 && onecol1 <=twocol1)
+    %%%%%: 1127-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1127-block  1
+branch  2 never executed
+branch  3 never executed
+        -: 1128:            {
+    #####: 1129:                if(field->view_table->table->filed[onerow1-1][onecol1-1]->owner==CHKS_OWNER_NONE)
+    %%%%%: 1129-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1130:                {
+    #####: 1131:                    kk=construire_arbre_queen(field,list->butright,onerow1,onecol1,4);
+    %%%%%: 1131-block  0
+call    0 never executed
+    #####: 1132:                    list->butright= inserer_debut(list->butright,kk);
+call    0 never executed
+        -: 1133:                }
+    #####: 1134:                onerow1++;
+    #####: 1135:                onecol1++;
+    %%%%%: 1135-block  0
+        -: 1136:            }
+        -: 1137:        }
+        -: 1138:    }
+    #####: 1139:    if(i!=1)//for 3
+    %%%%%: 1139-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1140:    {
+    #####: 1141:        first_one_or_two(ff,&c,&d,3,CHKS_OWNER_ONE,1,NULL,-1,-1);
+    %%%%%: 1141-block  0
+call    0 never executed
+    #####: 1142:        if(c!=-1 && d!=-1)
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1142-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1143:        {
+    #####: 1144:            first_one_or_two(ff,&k,&l,3,CHKS_OWNER_TWO,0,NULL,-1,-1);
+    %%%%%: 1144-block  0
+call    0 never executed
+    #####: 1145:            onerow1=c+1;
+    #####: 1146:            onecol1=d-1;
+    #####: 1147:            tworow1=k-1;
+    #####: 1148:            twocol1=l+1;
+    #####: 1149:            while (onerow1<=tworow1 && onecol1 >=twocol1)
+    %%%%%: 1149-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1149-block  1
+branch  2 never executed
+branch  3 never executed
+        -: 1150:            {
+    #####: 1151:                if(field->view_table->table->filed[onerow1-1][onecol1-1]->owner==CHKS_OWNER_NONE)
+    %%%%%: 1151-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1152:                {
+    #####: 1153:                    kk=construire_arbre_queen(field,list->butleft,onerow1,onecol1,4);
+    %%%%%: 1153-block  0
+call    0 never executed
+    #####: 1154:                    list->butleft= inserer_debut(list->butleft,kk);
+call    0 never executed
+        -: 1155:                }
+    #####: 1156:                onerow1++;
+    #####: 1157:                onecol1--;
+    %%%%%: 1157-block  0
+        -: 1158:            }
+        -: 1159:        }
+        -: 1160:    }
+    #####: 1161:    if(i!=3)//for 1
+    %%%%%: 1161-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1162:    {
+    #####: 1163:        first_one_or_two(ff,&c,&d,1,CHKS_OWNER_ONE,1,NULL,-1,-1);
+    %%%%%: 1163-block  0
+call    0 never executed
+    #####: 1164:        if(c!=-1 && d!=-1)
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1164-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1165:        {
+    #####: 1166:            first_one_or_two(ff,&k,&l,1,CHKS_OWNER_TWO,0,NULL,-1,-1);
+    %%%%%: 1166-block  0
+call    0 never executed
+    #####: 1167:            onerow1=c-1;
+    #####: 1168:            onecol1=d+1;
+    #####: 1169:            tworow1=k+1;
+    #####: 1170:            twocol1=l-1;
+    #####: 1171:            while (onerow1>=tworow1 && onecol1 <=twocol1)
+    %%%%%: 1171-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1171-block  1
+branch  2 never executed
+branch  3 never executed
+        -: 1172:            {
+    #####: 1173:                if(field->view_table->table->filed[onerow1-1][onecol1-1]->owner==CHKS_OWNER_NONE)
+    %%%%%: 1173-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1174:                {
+    #####: 1175:                    kk=construire_arbre_queen(field,list->topright,onerow1,onecol1,4);
+    %%%%%: 1175-block  0
+call    0 never executed
+    #####: 1176:                    list->topright= inserer_debut(list->topright,kk);
+call    0 never executed
+        -: 1177:                }
+    #####: 1178:                onerow1--;
+    #####: 1179:                onecol1++;
+    %%%%%: 1179-block  0
+        -: 1180:            }
+        -: 1181:        }
+        -: 1182:    }
+    #####: 1183:    return (cellule2*)list;
+    %%%%%: 1183-block  0
+        -: 1184:}
+        -: 1185:
+        -: 1186:
+function drop called 36 returned 100% blocks executed 91%
+       36: 1187:void drop(ChksField *last,ChksField *field,ChksOwner owner)
+        -: 1188:{
+       36: 1189:    int lrow,lcol,frow,fcol,a=-1,b=-1;
+        -: 1190:    GtkStyleContext* context;
+       36: 1191:    lrow=last->row;
+       36: 1192:    lcol=last->col;
+       36: 1193:    frow=field->row;
+       36: 1194:    fcol=field->col;
+       36: 1195:    if(frow > lrow && fcol < lcol)
+       36: 1195-block  0
+branch  0 taken 18 (fallthrough)
+branch  1 taken 18
+       18: 1195-block  1
+branch  2 taken 10 (fallthrough)
+branch  3 taken 8
+        -: 1196:    {
+       20: 1197:        while (frow>lrow && fcol <lcol)
+       10: 1197-block  0
+       20: 1197-block  1
+branch  0 taken 10 (fallthrough)
+branch  1 taken 10
+       10: 1197-block  2
+branch  2 taken 10
+branch  3 taken 0 (fallthrough)
+        -: 1198:        {
+       10: 1199:            if(field->view_table->table->filed[frow-1][fcol-1]->owner==owner)
+       10: 1199-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 10
+        -: 1200:            {
+    #####: 1201:                field->view_table->table->filed[frow-1][fcol-1]->owner=CHKS_OWNER_NONE;
+    #####: 1202:                a=frow;
+    #####: 1203:                b=fcol;
+    %%%%%: 1203-block  0
+        -: 1204:            }
+       10: 1205:            frow--;
+       10: 1206:            fcol++;
+       10: 1206-block  0
+        -: 1207:        }
+       26: 1208:    }else if(frow> lrow && fcol > lcol)
+       26: 1208-block  0
+branch  0 taken 8 (fallthrough)
+branch  1 taken 18
+        8: 1208-block  1
+branch  2 taken 8 (fallthrough)
+branch  3 taken 0
+        -: 1209:    {
+       16: 1210:        while (frow>lrow && fcol >lcol)
+        8: 1210-block  0
+       16: 1210-block  1
+branch  0 taken 8 (fallthrough)
+branch  1 taken 8
+        8: 1210-block  2
+branch  2 taken 8
+branch  3 taken 0 (fallthrough)
+        -: 1211:        {
+        8: 1212:            if(field->view_table->table->filed[frow-1][fcol-1]->owner==owner)
+        8: 1212-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 8
+        -: 1213:            {
+    #####: 1214:                field->view_table->table->filed[frow-1][fcol-1]->owner=CHKS_OWNER_NONE;
+    #####: 1215:                a=frow;
+    #####: 1216:                b=fcol;
+    %%%%%: 1216-block  0
+        -: 1217:            }
+        8: 1218:            frow--;
+        8: 1219:            fcol--;
+        8: 1219-block  0
+        -: 1220:        }
+       18: 1221:    }else if(frow< lrow && fcol > lcol)
+       18: 1221-block  0
+branch  0 taken 18 (fallthrough)
+branch  1 taken 0
+       18: 1221-block  1
+branch  2 taken 8 (fallthrough)
+branch  3 taken 10
+        -: 1222:    {
+       18: 1223:        while (frow<lrow && fcol >lcol)
+        8: 1223-block  0
+       18: 1223-block  1
+branch  0 taken 10 (fallthrough)
+branch  1 taken 8
+       10: 1223-block  2
+branch  2 taken 10
+branch  3 taken 0 (fallthrough)
+        -: 1224:        {
+       10: 1225:            if(field->view_table->table->filed[frow-1][fcol-1]->owner==owner)
+       10: 1225-block  0
+branch  0 taken 2 (fallthrough)
+branch  1 taken 8
+        -: 1226:            {
+        2: 1227:                field->view_table->table->filed[frow-1][fcol-1]->owner=CHKS_OWNER_NONE;
+        2: 1228:                a=frow;
+        2: 1229:                b=fcol;
+        2: 1229-block  0
+        -: 1230:            }
+       10: 1231:            frow++;
+       10: 1232:            fcol--;
+       10: 1232-block  0
+        -: 1233:        }
+       10: 1234:    }else if(frow < lrow && fcol < lcol)
+       10: 1234-block  0
+branch  0 taken 10 (fallthrough)
+branch  1 taken 0
+       10: 1234-block  1
+branch  2 taken 10 (fallthrough)
+branch  3 taken 0
+        -: 1235:    {
+       25: 1236:        while (frow <lrow && fcol <lcol)
+       10: 1236-block  0
+       25: 1236-block  1
+branch  0 taken 15 (fallthrough)
+branch  1 taken 10
+       15: 1236-block  2
+branch  2 taken 15
+branch  3 taken 0 (fallthrough)
+        -: 1237:        {
+       15: 1238:            if(field->view_table->table->filed[frow-1][fcol-1]->owner==owner)
+       15: 1238-block  0
+branch  0 taken 5 (fallthrough)
+branch  1 taken 10
+        -: 1239:            {
+        5: 1240:                field->view_table->table->filed[frow-1][fcol-1]->owner=CHKS_OWNER_NONE;
+        5: 1241:                a=frow;
+        5: 1242:                b=fcol;
+        5: 1242-block  0
+        -: 1243:            }
+       15: 1244:            frow++;
+       15: 1245:            fcol++;
+       15: 1245-block  0
+        -: 1246:        }
+        -: 1247:    }
+       36: 1248:    if(a!=-1 && b!=-1)
+       36: 1248-block  0
+branch  0 taken 7 (fallthrough)
+branch  1 taken 29
+        7: 1248-block  1
+branch  2 taken 7 (fallthrough)
+branch  3 taken 0
+        -: 1249:    {
+        7: 1250:        switch (owner) {
+        7: 1250-block  0
+branch  0 taken 7
+branch  1 taken 0
+branch  2 taken 0
+        7: 1251:            case CHKS_OWNER_ONE:
+        7: 1252:                delete_value_ChkPlayer(field->view_table->user,a,b);
+        7: 1252-block  0
+call    0 returned 7
+        7: 1253:                break;
+    #####: 1254:            case CHKS_OWNER_TWO:
+    #####: 1255:                delete_value_ChkPlayer(field->view_table->machine,a,b);
+    %%%%%: 1255-block  0
+call    0 never executed
+    #####: 1256:                break;
+        -: 1257:        }
+        -: 1258:    }
+       36: 1259:}
+        -: 1260:
+function drop1 called 1132 returned 100% blocks executed 100%
+     1132: 1261:void drop1(etat_window *etw1,ChksOwner owner,int lrow,int lcol,int frow,int fcol)
+        -: 1262:{
+        -: 1263:    GtkStyleContext* context;
+     1132: 1264:    int a=-1,b=-1;
+     1132: 1265:    if(frow > lrow && fcol < lcol)
+     1132: 1265-block  0
+branch  0 taken 995 (fallthrough)
+branch  1 taken 137
+      995: 1265-block  1
+branch  2 taken 574 (fallthrough)
+branch  3 taken 421
+        -: 1266:    {
+     1248: 1267:        while (frow>lrow && fcol <lcol)
+      574: 1267-block  0
+     1248: 1267-block  1
+branch  0 taken 674 (fallthrough)
+branch  1 taken 574
+      674: 1267-block  2
+branch  2 taken 674
+branch  3 taken 0 (fallthrough)
+        -: 1268:        {
+      674: 1269:            if(etw1->filed[frow-1][fcol-1]->owner==owner)
+      674: 1269-block  0
+branch  0 taken 100 (fallthrough)
+branch  1 taken 574
+        -: 1270:            {
+      100: 1271:                etw1->filed[frow-1][fcol-1]->owner=CHKS_OWNER_NONE;
+      100: 1272:                a=frow;
+      100: 1273:                b=fcol;
+      100: 1273-block  0
+        -: 1274:            }
+      674: 1275:            frow--;
+      674: 1276:            fcol++;
+      674: 1276-block  0
+        -: 1277:        }
+      558: 1278:    }else if(frow> lrow && fcol > lcol)
+      558: 1278-block  0
+branch  0 taken 421 (fallthrough)
+branch  1 taken 137
+      421: 1278-block  1
+branch  2 taken 421 (fallthrough)
+branch  3 taken 0
+        -: 1279:    {
+      922: 1280:        while (frow>lrow && fcol >lcol)
+      421: 1280-block  0
+      922: 1280-block  1
+branch  0 taken 501 (fallthrough)
+branch  1 taken 421
+      501: 1280-block  2
+branch  2 taken 501
+branch  3 taken 0 (fallthrough)
+        -: 1281:        {
+      501: 1282:            if(etw1->filed[frow-1][fcol-1]->owner==owner)
+      501: 1282-block  0
+branch  0 taken 72 (fallthrough)
+branch  1 taken 429
+        -: 1283:            {
+       72: 1284:                etw1->filed[frow-1][fcol-1]->owner=CHKS_OWNER_NONE;
+       72: 1285:                a=frow;
+       72: 1286:                b=fcol;
+       72: 1286-block  0
+        -: 1287:            }
+      501: 1288:            frow--;
+      501: 1289:            fcol--;
+      501: 1289-block  0
+        -: 1290:        }
+      137: 1291:    }else if(frow< lrow && fcol > lcol)
+      137: 1291-block  0
+branch  0 taken 136 (fallthrough)
+branch  1 taken 1
+      136: 1291-block  1
+branch  2 taken 60 (fallthrough)
+branch  3 taken 76
+        -: 1292:    {
+      123: 1293:        while (frow<lrow && fcol >lcol)
+       60: 1293-block  0
+      123: 1293-block  1
+branch  0 taken 63 (fallthrough)
+branch  1 taken 60
+       63: 1293-block  2
+branch  2 taken 63
+branch  3 taken 0 (fallthrough)
+        -: 1294:        {
+       63: 1295:            if(etw1->filed[frow-1][fcol-1]->owner==owner)
+       63: 1295-block  0
+branch  0 taken 3 (fallthrough)
+branch  1 taken 60
+        -: 1296:            {
+        3: 1297:                etw1->filed[frow-1][fcol-1]->owner=CHKS_OWNER_NONE;
+        3: 1298:                a=frow;
+        3: 1299:                b=fcol;
+        3: 1299-block  0
+        -: 1300:            }
+       63: 1301:            frow++;
+       63: 1302:            fcol--;
+       63: 1302-block  0
+        -: 1303:        }
+       77: 1304:    }else if(frow < lrow && fcol < lcol)
+       77: 1304-block  0
+branch  0 taken 76 (fallthrough)
+branch  1 taken 1
+       76: 1304-block  1
+branch  2 taken 76 (fallthrough)
+branch  3 taken 0
+        -: 1305:    {
+      158: 1306:        while (frow <lrow && fcol <lcol)
+       76: 1306-block  0
+      158: 1306-block  1
+branch  0 taken 82 (fallthrough)
+branch  1 taken 76
+       82: 1306-block  2
+branch  2 taken 82
+branch  3 taken 0 (fallthrough)
+        -: 1307:        {
+       82: 1308:            if(etw1->filed[frow-1][fcol-1]->owner==owner)
+       82: 1308-block  0
+branch  0 taken 6 (fallthrough)
+branch  1 taken 76
+        -: 1309:            {
+        6: 1310:                etw1->filed[frow-1][fcol-1]->owner=CHKS_OWNER_NONE;
+        6: 1311:                a=frow;
+        6: 1312:                b=fcol;
+        6: 1312-block  0
+        -: 1313:            }
+       82: 1314:            frow++;
+       82: 1315:            fcol++;
+       82: 1315-block  0
+        -: 1316:        }
+        -: 1317:    }
+     1132: 1318:    if(a!=-1 && b!=-1)
+     1132: 1318-block  0
+branch  0 taken 181 (fallthrough)
+branch  1 taken 951
+      181: 1318-block  1
+branch  2 taken 181 (fallthrough)
+branch  3 taken 0
+        -: 1319:    {
+      181: 1320:        switch (owner) {
+      181: 1320-block  0
+branch  0 taken 9
+branch  1 taken 172
+branch  2 taken 0
+        9: 1321:            case CHKS_OWNER_ONE:
+        9: 1322:                delete_value_ChkPlayer(etw1->user,a,b);
+        9: 1322-block  0
+call    0 returned 9
+        9: 1323:                break;
+      172: 1324:            case CHKS_OWNER_TWO:
+      172: 1325:                delete_value_ChkPlayer(etw1->machine,a,b);
+      172: 1325-block  0
+call    0 returned 172
+      172: 1326:                break;
+        -: 1327:        }
+        -: 1328:    }
+     1132: 1329:}
+        -: 1330:
+        -: 1331:
+        -: 1332://file sera rempli si il ya plusieurs deplacement
+function drop_two_betwen_fl_lt called 35 returned 100% blocks executed 100%
+       35: 1333:void drop_two_betwen_fl_lt(ChksField *last,ChksField *field,File *f,ChksOwner owner)
+        -: 1334:{
+        -: 1335:    int a,b,c,d;
+       35: 1336:    if(!f)
+       35: 1336-block  0
+branch  0 taken 29 (fallthrough)
+branch  1 taken 6
+        -: 1337:    {
+       29: 1338:        drop(last,field,owner);
+       29: 1338-block  0
+call    0 returned 29
+        -: 1339:    }else{
+        6: 1340:        defiler(f);
+        6: 1340-block  0
+call    0 returned 6
+        6: 1341:        a=f->tete->row;
+        6: 1342:        b=f->tete->col;
+        6: 1343:        drop(last,field->view_table->table->filed[a-1][b-1],owner);
+call    0 returned 6
+        6: 1344:        defiler(f);
+call    0 returned 6
+        6: 1345:        if(est_vide_file(f))return;
+call    0 returned 6
+branch  1 taken 5 (fallthrough)
+branch  2 taken 1
+        5: 1345-block  0
+        -: 1346:        do
+        -: 1347:        {
+        1: 1348:            c=f->tete->row;
+        1: 1349:            d=f->tete->col;
+        1: 1350:            drop(field->view_table->table->filed[a-1][b-1],
+        1: 1351:                 field->view_table->table->filed[c-1][d-1],owner);
+        1: 1351-block  0
+call    0 returned 1
+        1: 1352:            defiler(f);
+call    0 returned 1
+        1: 1353:        } while (!est_vide_file(f));
+call    0 returned 1
+branch  1 taken 0
+branch  2 taken 1 (fallthrough)
+        -: 1354:    }
+        -: 1355:}
+        -: 1356:
+function drop_two_betwen_fl_lt1 called 1093 returned 100% blocks executed 100%
+     1093: 1357:void drop_two_betwen_fl_lt1(etat_window *etw1,File *f,ChksOwner owner,int lrow,int lcol,int frow,int fcol)
+        -: 1358:{
+        -: 1359:    int a,b,c,d;
+     1093: 1360:    if(!f)
+     1093: 1360-block  0
+branch  0 taken 951 (fallthrough)
+branch  1 taken 142
+        -: 1361:    {
+      951: 1362:        drop1(etw1,owner,lrow,lcol,frow,fcol);
+      951: 1362-block  0
+call    0 returned 951
+        -: 1363:    }else{
+      142: 1364:        defiler(f);
+      142: 1364-block  0
+call    0 returned 142
+      142: 1365:        a=f->tete->row;
+      142: 1366:        b=f->tete->col;
+      142: 1367:        drop1(etw1,owner,lrow,lcol,a,b);
+call    0 returned 142
+      142: 1368:        defiler(f);
+call    0 returned 142
+      142: 1369:        if(est_vide_file(f))return;
+call    0 returned 142
+branch  1 taken 107 (fallthrough)
+branch  2 taken 35
+      107: 1369-block  0
+        -: 1370:        do
+        -: 1371:        {
+       39: 1372:            c=f->tete->row;
+       39: 1373:            d=f->tete->col;
+       39: 1374:            drop1(etw1,owner,a,b,c,d);
+       39: 1374-block  0
+call    0 returned 39
+       39: 1375:            defiler(f);
+call    0 returned 39
+       39: 1376:        } while (!est_vide_file(f));
+call    0 returned 39
+branch  1 taken 4
+branch  2 taken 35 (fallthrough)
+        -: 1377:    }
+        -: 1378:}
+        -: 1379:
+function creer_field called 71168 returned 100% blocks executed 60%
+    71168: 1380:ChksField *creer_field()
+        -: 1381:{
+    71168: 1382:    ChksField *fl=(ChksField*)malloc(sizeof (ChksField));
+    71168: 1383:    if(!fl)
+    71168: 1383-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 71168
+        -: 1384:    {
+    #####: 1385:        printf("error allocation");
+    %%%%%: 1385-block  0
+call    0 never executed
+    #####: 1386:        exit(-1);
+call    0 never executed
+        -: 1387:    }
+    71168: 1388:    return (ChksField*)fl;
+    71168: 1388-block  0
+        -: 1389:}
+        -: 1390:
+        -: 1391:
+function creer_intialiser_etat_window called 1111 returned 100% blocks executed 86%
+     1111: 1392:etat_window *creer_intialiser_etat_window()
+        -: 1393:{
+        -: 1394:    etat_window *info;
+     1111: 1395:    info=(etat_window*)malloc(sizeof (etat_window));
+     1111: 1396:    if(!info)
+     1111: 1396-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1111
+        -: 1397:    {
+    #####: 1398:        printf("error allocation \n");
+    %%%%%: 1398-block  0
+call    0 never executed
+    #####: 1399:        exit(-1);
+call    0 never executed
+        -: 1400:    }
+        -: 1401:    int i,j;
+     9999: 1402:    for(i=0;i<8;i++)
+     1111: 1402-block  0
+     8888: 1402-block  1
+     9999: 1402-block  2
+branch  0 taken 8888
+branch  1 taken 1111 (fallthrough)
+    79992: 1403:        for(j=0;j<8;j++)
+     8888: 1403-block  0
+    79992: 1403-block  1
+branch  0 taken 71104
+branch  1 taken 8888 (fallthrough)
+    71104: 1404:            info->filed[i][j]=creer_field();
+    71104: 1404-block  0
+call    0 returned 71104
+     1111: 1405:    info->user=creer_player();
+     1111: 1405-block  0
+call    0 returned 1111
+     1111: 1406:    info->machine=creer_player();
+call    0 returned 1111
+     1111: 1407:    return (etat_window*)info;
+        -: 1408:}
+        -: 1409:
+        -: 1410:
+        -: 1411:
+function copie_win_field called 18 returned 100% blocks executed 100%
+       18: 1412:void copie_win_field(Chkswindow *winS,etat_window *winD)
+        -: 1413:{
+        -: 1414:    int i,j;
+      173: 1415:    for(i=0;i<winS->user->nbr_piece_disp;i++)
+       18: 1415-block  0
+      173: 1415-block  1
+branch  0 taken 155
+branch  1 taken 18 (fallthrough)
+        -: 1416:    {
+      155: 1417:        winD->user->Tab[i].x=winS->user ->Tab[i].x;
+      155: 1418:        winD->user->Tab[i].y=winS->user ->Tab[i].y;
+      155: 1418-block  0
+        -: 1419:    }
+       18: 1420:    winD->user->nbr_piece_disp=winS->user->nbr_piece_disp;
+      234: 1421:    for(i=0;i<winS->machine->nbr_piece_disp;i++)
+       18: 1421-block  0
+      234: 1421-block  1
+branch  0 taken 216
+branch  1 taken 18 (fallthrough)
+        -: 1422:    {
+      216: 1423:        winD->machine->Tab[i].x=winS->machine ->Tab[i].x;
+      216: 1424:        winD->machine->Tab[i].y=winS->machine ->Tab[i].y;
+      216: 1424-block  0
+        -: 1425:    }
+       18: 1426:    winD->machine->nbr_piece_disp=winS->machine->nbr_piece_disp;
+      162: 1427:    for(i=0;i<8;i++)
+       18: 1427-block  0
+      144: 1427-block  1
+      162: 1427-block  2
+branch  0 taken 144
+branch  1 taken 18 (fallthrough)
+        -: 1428:    {
+     1296: 1429:        for(j=0;j<8;j++)
+      144: 1429-block  0
+     1296: 1429-block  1
+branch  0 taken 1152
+branch  1 taken 144 (fallthrough)
+        -: 1430:        {
+     1152: 1431:            winD->filed[i][j]->row=winS->table->filed[i][j]->row;
+     1152: 1432:            winD->filed[i][j]->col=winS->table->filed[i][j]->col;
+     1152: 1433:            winD->filed[i][j]->owner=winS->table->filed[i][j]->owner;
+     1152: 1434:            winD->filed[i][j]->is_queen=winS->table->filed[i][j]->is_queen;
+     1152: 1434-block  0
+        -: 1435:        }
+        -: 1436:    }
+       18: 1437:}
+        -: 1438:
+function copie_win_field1 called 1093 returned 100% blocks executed 100%
+     1093: 1439:void copie_win_field1(etat_window *winS,etat_window *winD)
+        -: 1440:{
+        -: 1441:    int i,j;
+    10659: 1442:    for(i=0;i<winS->user->nbr_piece_disp;i++)
+     1093: 1442-block  0
+    10659: 1442-block  1
+branch  0 taken 9566
+branch  1 taken 1093 (fallthrough)
+        -: 1443:    {
+     9566: 1444:        winD->user->Tab[i].x=winS->user ->Tab[i].x;
+     9566: 1445:        winD->user->Tab[i].y=winS->user ->Tab[i].y;
+     9566: 1445-block  0
+        -: 1446:    }
+     1093: 1447:    winD->user->nbr_piece_disp=winS->user->nbr_piece_disp;
+    14209: 1448:    for(i=0;i<winS->machine->nbr_piece_disp;i++)
+     1093: 1448-block  0
+    14209: 1448-block  1
+branch  0 taken 13116
+branch  1 taken 1093 (fallthrough)
+        -: 1449:    {
+    13116: 1450:        winD->machine->Tab[i].x=winS->machine ->Tab[i].x;
+    13116: 1451:        winD->machine->Tab[i].y=winS->machine ->Tab[i].y;
+    13116: 1451-block  0
+        -: 1452:    }
+     1093: 1453:    winD->machine->nbr_piece_disp=winS->machine->nbr_piece_disp;
+     9837: 1454:    for(i=0;i<8;i++)
+     1093: 1454-block  0
+     8744: 1454-block  1
+     9837: 1454-block  2
+branch  0 taken 8744
+branch  1 taken 1093 (fallthrough)
+        -: 1455:    {
+    78696: 1456:        for(j=0;j<8;j++)
+     8744: 1456-block  0
+    78696: 1456-block  1
+branch  0 taken 69952
+branch  1 taken 8744 (fallthrough)
+        -: 1457:        {
+    69952: 1458:            winD->filed[i][j]->row=winS->filed[i][j]->row;
+    69952: 1459:            winD->filed[i][j]->col=winS->filed[i][j]->col;
+    69952: 1460:            winD->filed[i][j]->owner=winS->filed[i][j]->owner;
+    69952: 1461:            winD->filed[i][j]->is_queen=winS->filed[i][j]->is_queen;
+    69952: 1462:            winD->filed[i][j]->button=winS->filed[i][j]->button;
+    69952: 1462-block  0
+        -: 1463:        }
+        -: 1464:    }
+     1093: 1465:}
+        -: 1466:
+function inserer_fin_liste_cellule called 1298 returned 100% blocks executed 100%
+     1298: 1467:cellule *inserer_fin_liste_cellule(cellule *liste,int row,int col)
+        -: 1468:{
+     1298: 1469:    cellule *ne= creer_initialiser_cellule(row,col,-1,-1);
+     1298: 1469-block  0
+call    0 returned 1298
+     1298: 1470:    if(!liste)return (cellule*)ne;
+branch  0 taken 1110 (fallthrough)
+branch  1 taken 188
+     1110: 1470-block  0
+      188: 1471:    if(!liste->suiv)
+      188: 1471-block  0
+branch  0 taken 148 (fallthrough)
+branch  1 taken 40
+        -: 1472:    {
+      148: 1473:        liste->suiv=ne;
+      148: 1474:        return (cellule*)liste;
+      148: 1474-block  0
+        -: 1475:    }
+        -: 1476:    cellule *p,*q;
+       40: 1477:    p=liste;
+      124: 1478:    while (p)
+       40: 1478-block  0
+      124: 1478-block  1
+branch  0 taken 84
+branch  1 taken 40 (fallthrough)
+        -: 1479:    {
+       84: 1480:        q=p;
+       84: 1481:        p=p->suiv;
+       84: 1481-block  0
+        -: 1482:    }
+       40: 1483:    q->suiv=ne;
+       40: 1484:    return (cellule*)liste;
+       40: 1484-block  0
+        -: 1485:}
+        -: 1486:
+function supprimer_fin_liste called 0 returned 0% blocks executed 0%
+    #####: 1487:cellule *supprimer_fin_liste(cellule *list)
+        -: 1488:{
+    #####: 1489:    if(!list)return (cellule*)list;
+    %%%%%: 1489-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1489-block  1
+    #####: 1490:    if(!list->suiv)
+    %%%%%: 1490-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1491:    {
+    #####: 1492:        free(list);
+    #####: 1493:        return (cellule*)NULL;
+    %%%%%: 1493-block  0
+        -: 1494:    }
+        -: 1495:    cellule *p,*q;
+    #####: 1496:    p=list;
+    #####: 1497:    while (p->suiv)
+    %%%%%: 1497-block  0
+    %%%%%: 1497-block  1
+branch  0 never executed
+branch  1 never executed
+        -: 1498:    {
+    #####: 1499:        q=p;
+    #####: 1500:        p=p->suiv;
+    %%%%%: 1500-block  0
+        -: 1501:    }
+    #####: 1502:    q->suiv=NULL;
+    #####: 1503:    free(p);
+    #####: 1504:    return (cellule*)list;
+    %%%%%: 1504-block  0
+        -: 1505:}
+        -: 1506:
+        -: 1507:
+function queen_arbre1 called 3 returned 100% blocks executed 33%
+        3: 1508:cellule2 *queen_arbre1(cellule2 *ar,int i,etat_window *etw,int onerow,int onecol,ChksOwner owner,ChksOwner notowner)//machine
+        -: 1509:{
+        -: 1510:    int c,d;
+        -: 1511:    ChksField *field1;
+        3: 1512:    switch (i)
+        3: 1512-block  0
+branch  0 taken 0
+branch  1 taken 0
+branch  2 taken 1
+branch  3 taken 2
+branch  4 taken 0
+        -: 1513:    {
+    #####: 1514:        case 1://top right
+        -: 1515:            do{
+    #####: 1516:                field1=etw->filed[onerow-1][onecol-1];
+    #####: 1517:                if(field1->owner==CHKS_OWNER_NONE)
+    %%%%%: 1517-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1518:                {
+    #####: 1519:                    cellule2 *ne= crrer_initailiser_ccellule2(0,onerow,onecol);
+    %%%%%: 1519-block  0
+call    0 never executed
+    #####: 1520:                    first_one_or_two(NULL,&c,&d,2,owner,1,etw,field1->row,field1->col);
+call    0 never executed
+    #####: 1521:                    if(c!=-1 && d!=-1)
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1521-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1522:                    {
+    #####: 1523:                        ne=queen_arbre1(ne,2,etw,c,d,owner,notowner);
+    %%%%%: 1523-block  0
+call    0 never executed
+        -: 1524:                    }
+    #####: 1525:                    first_one_or_two(NULL,&c,&d,4,owner,1,etw,field1->row,field1->col);
+    %%%%%: 1525-block  0
+call    0 never executed
+    #####: 1526:                    if(c!=-1 && d!=-1)
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1526-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1527:                    {
+    #####: 1528:                        ne=queen_arbre1(ne,4,etw,c,d,owner,notowner);
+    %%%%%: 1528-block  0
+call    0 never executed
+        -: 1529:                    }
+    #####: 1530:                    ar->topright=inserer_debut(ar->topright,ne);
+    %%%%%: 1530-block  0
+call    0 never executed
+    #####: 1531:                }else if((field1->owner==notowner)||two_consecutif2(onerow,onecol,etw,i,owner))break;
+    %%%%%: 1531-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1531-block  1
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+    #####: 1532:                onerow--;
+    #####: 1533:                onecol++;
+    #####: 1534:            } while ((onerow>=1) && (onecol<=8));
+    %%%%%: 1534-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1534-block  1
+branch  2 never executed
+branch  3 never executed
+    #####: 1535:            break;
+    %%%%%: 1535-block  0
+    #####: 1536:        case 2://top left
+    %%%%%: 1536-block  0
+        -: 1537:            do{
+    #####: 1538:                field1=etw->filed[onerow-1][onecol-1];
+    #####: 1539:                if(field1->owner==CHKS_OWNER_NONE)
+    %%%%%: 1539-block  0
+branch  0 never executed
+branch  1 never executed
+        -: 1540:                {
+    #####: 1541:                    cellule2 *ne= crrer_initailiser_ccellule2(0,onerow,onecol);
+    %%%%%: 1541-block  0
+call    0 never executed
+    #####: 1542:                    first_one_or_two(NULL,&c,&d,1,owner,1,etw,field1->row,field1->col);
+call    0 never executed
+    #####: 1543:                    if(c!=-1 && d!=-1)
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1543-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1544:                    {
+    #####: 1545:                        ne=queen_arbre1(ne,1,etw,c,d,owner,notowner);
+    %%%%%: 1545-block  0
+call    0 never executed
+        -: 1546:                    }
+    #####: 1547:                    first_one_or_two(NULL,&c,&d,3,owner,1,etw,field1->row,field1->col);
+    %%%%%: 1547-block  0
+call    0 never executed
+    #####: 1548:                    if(c!=-1 && d!=-1)
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1548-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1549:                    {
+    #####: 1550:                        ne=queen_arbre1(ne,3,etw,c,d,owner,notowner);
+    %%%%%: 1550-block  0
+call    0 never executed
+        -: 1551:                    }
+    #####: 1552:                    ar->topleft=inserer_debut(ar->topleft,ne);
+    %%%%%: 1552-block  0
+call    0 never executed
+    #####: 1553:                }else if((field1->owner==notowner) || (two_consecutif2(onerow,onecol,etw,i,owner)))break;
+    %%%%%: 1553-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1553-block  1
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+    #####: 1554:                onerow--;
+    #####: 1555:                onecol--;
+    #####: 1556:            } while ((onerow>=1) && (onecol>=1));
+    %%%%%: 1556-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1556-block  1
+branch  2 never executed
+branch  3 never executed
+    #####: 1557:            break;
+    %%%%%: 1557-block  0
+        2: 1558:        case 3://buttom left
+        2: 1558-block  0
+        -: 1559:            do{
+        3: 1560:                field1=etw->filed[onerow-1][onecol-1];
+        3: 1561:                if(field1->owner==CHKS_OWNER_NONE)
+        3: 1561-block  0
+branch  0 taken 2 (fallthrough)
+branch  1 taken 1
+        -: 1562:                {
+        2: 1563:                    cellule2 *ne= crrer_initailiser_ccellule2(0,onerow,onecol);
+        2: 1563-block  0
+call    0 returned 2
+        2: 1564:                    first_one_or_two(NULL,&c,&d,2,owner,1,etw,field1->row,field1->col);
+call    0 returned 2
+       2*: 1565:                    if(c!=-1 && d!=-1)
+branch  0 taken 0 (fallthrough)
+branch  1 taken 2
+    %%%%%: 1565-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1566:                    {
+    #####: 1567:                        ne=queen_arbre1(ne,2,etw,c,d,owner,notowner);
+    %%%%%: 1567-block  0
+call    0 never executed
+        -: 1568:                    }
+        2: 1569:                    first_one_or_two(NULL,&c,&d,4,owner,1,etw,field1->row,field1->col);
+        2: 1569-block  0
+call    0 returned 2
+       2*: 1570:                    if(c!=-1 && d!=-1)
+branch  0 taken 0 (fallthrough)
+branch  1 taken 2
+    %%%%%: 1570-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1571:                    {
+    #####: 1572:                        ne=queen_arbre1(ne,4,etw,c,d,owner,notowner);
+    %%%%%: 1572-block  0
+call    0 never executed
+        -: 1573:                    }
+        2: 1574:                    ar->butleft=inserer_debut(ar->butleft,ne);
+        2: 1574-block  0
+call    0 returned 2
+        1: 1575:                }else if((field1->owner==notowner) || (two_consecutif2(onerow,onecol,etw,i,owner)))break;
+        1: 1575-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 0
+        1: 1575-block  1
+call    2 returned 1
+branch  3 taken 1 (fallthrough)
+branch  4 taken 0
+        3: 1576:                onerow++;
+        3: 1577:                onecol--;
+        3: 1578:            } while ((onerow<=8) && (onecol>=1));
+        3: 1578-block  0
+branch  0 taken 3 (fallthrough)
+branch  1 taken 0
+        3: 1578-block  1
+branch  2 taken 2
+branch  3 taken 1 (fallthrough)
+        1: 1579:            break;
+        1: 1579-block  0
+        1: 1580:        case 4://buttom right
+        1: 1580-block  0
+        -: 1581:            do{
+        3: 1582:                field1=etw->filed[onerow-1][onecol-1];
+        3: 1583:                if(field1->owner==CHKS_OWNER_NONE)
+        3: 1583-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 3
+        -: 1584:                {
+    #####: 1585:                    cellule2 *ne= crrer_initailiser_ccellule2(0,onerow,onecol);
+    %%%%%: 1585-block  0
+call    0 never executed
+    #####: 1586:                    first_one_or_two(NULL,&c,&d,1,owner,1,etw,field1->row,field1->col);
+call    0 never executed
+    #####: 1587:                    if(c!=-1 && d!=-1)
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1587-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1588:                    {
+    #####: 1589:                        ne=queen_arbre1(ne,1,etw,c,d,owner,notowner);
+    %%%%%: 1589-block  0
+call    0 never executed
+        -: 1590:                    }
+    #####: 1591:                    first_one_or_two(NULL,&c,&d,3,owner,1,etw,field1->row,field1->col);
+    %%%%%: 1591-block  0
+call    0 never executed
+    #####: 1592:                    if(c!=-1 && d!=-1)
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1592-block  0
+branch  2 never executed
+branch  3 never executed
+        -: 1593:                    {
+    #####: 1594:                        ne=queen_arbre1(ne,3,etw,c,d,owner,notowner);
+    %%%%%: 1594-block  0
+call    0 never executed
+        -: 1595:                    }
+    #####: 1596:                    ar->butright=inserer_debut(ar->butright,ne);
+    %%%%%: 1596-block  0
+call    0 never executed
+        3: 1597:                }else if((field1->owner==notowner) || (two_consecutif2(onerow,onecol,etw,i,owner)))break;
+        3: 1597-block  0
+branch  0 taken 2 (fallthrough)
+branch  1 taken 1
+        2: 1597-block  1
+call    2 returned 2
+branch  3 taken 1 (fallthrough)
+branch  4 taken 1
+        1: 1598:                onerow++;
+        1: 1599:                onecol++;
+        1: 1600:            } while ((onerow<=8) && (onecol<=8));
+        1: 1600-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 0
+        1: 1600-block  1
+branch  2 taken 1
+branch  3 taken 0 (fallthrough)
+        2: 1601:            break;
+        2: 1601-block  0
+        -: 1602:    }
+        3: 1603:    return (cellule2*)ar;
+        3: 1603-block  0
+        -: 1604:}
+        -: 1605:
+function table_arbre_shemin called 155 returned 100% blocks executed 81%
+      155: 1606:cellule2 **table_arbre_shemin(cellule2 **cl,etat_window *etw,ChksOwner owner)
+        -: 1607:{
+        -: 1608:    int taille,n,i,row,col,j;
+        -: 1609:    ChksField *field;
+      155: 1610:    switch (owner) {
+      155: 1610-block  0
+branch  0 taken 137
+branch  1 taken 18
+branch  2 taken 0
+      137: 1611:        case CHKS_OWNER_ONE:
+        -: 1612:
+      137: 1613:            taille=etw->user->nbr_piece_disp;
+      137: 1614:            cl=(cellule2**) malloc(sizeof (cellule2*)*taille);
+      137: 1615:            if(!cl)
+      137: 1615-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 137
+        -: 1616:            {
+    #####: 1617:                printf("error allocation");
+    %%%%%: 1617-block  0
+call    0 never executed
+    #####: 1618:                exit(-1);
+call    0 never executed
+        -: 1619:            }
+     1277: 1620:            for(n=0;n<taille;n++)cl[n]=NULL;
+      137: 1620-block  0
+     1140: 1620-block  1
+     1277: 1620-block  2
+branch  0 taken 1140
+branch  1 taken 137 (fallthrough)
+     1277: 1621:            for(i=0;i<taille;i++)
+      137: 1621-block  0
+     1140: 1621-block  1
+     1277: 1621-block  2
+branch  0 taken 1140
+branch  1 taken 137 (fallthrough)
+        -: 1622:            {
+     1140: 1623:                row=etw->user->Tab[i].x;
+     1140: 1624:                col=etw->user->Tab[i].y;
+     1140: 1625:                if(!etw->filed[row-1][col-1]->is_queen)
+     1140: 1625-block  0
+branch  0 taken 1140 (fallthrough)
+branch  1 taken 0
+        -: 1626:                {
+     1140: 1627:                    if((row+1-1<=7) && (col-1-1>=0))
+     1140: 1627-block  0
+branch  0 taken 1140 (fallthrough)
+branch  1 taken 0
+     1140: 1627-block  1
+branch  2 taken 1104 (fallthrough)
+branch  3 taken 36
+        -: 1628:                    {
+     1104: 1629:                        if(etw->filed[row+1-1][col-1-1]->owner==CHKS_OWNER_NONE)//left
+     1104: 1629-block  0
+branch  0 taken 474 (fallthrough)
+branch  1 taken 630
+      474: 1630:                            cl[i]=inserer_fin_liste(cl[i],0,row+1,col-1);
+      474: 1630-block  0
+call    0 returned 474
+        -: 1631:                    }
+     1140: 1632:                    if((row+1-1<=7) && (col+1-1<=7))
+     1140: 1632-block  0
+branch  0 taken 1140 (fallthrough)
+branch  1 taken 0
+     1140: 1632-block  1
+branch  2 taken 866 (fallthrough)
+branch  3 taken 274
+        -: 1633:                    {
+      866: 1634:                        if(etw->filed[row+1-1][col+1-1]->owner==CHKS_OWNER_NONE)//right
+      866: 1634-block  0
+branch  0 taken 348 (fallthrough)
+branch  1 taken 518
+      348: 1635:                            cl[i]=inserer_fin_liste(cl[i],0,row+1,col+1);
+      348: 1635-block  0
+call    0 returned 348
+        -: 1636:                    }
+     1140: 1637:                    cellule2 *ne_test= crrer_initailiser_ccellule2(0,row,col);
+     1140: 1637-block  0
+call    0 returned 1140
+     1140: 1638:                    ne_test=construire_arbre2(etw,ne_test,row,col);
+call    0 returned 1140
+     1140: 1639:                    if(ne_test->topleft || ne_test->topright)
+branch  0 taken 1053 (fallthrough)
+branch  1 taken 87
+     1053: 1639-block  0
+branch  2 taken 40 (fallthrough)
+branch  3 taken 1013
+        -: 1640:                    {
+      127: 1641:                        if(!cl[i])
+      127: 1641-block  0
+branch  0 taken 69 (fallthrough)
+branch  1 taken 58
+       69: 1642:                            cl[i]=ne_test;
+       69: 1642-block  0
+        -: 1643:                        else {
+       58: 1644:                            ne_test->suiv = cl[i];
+       58: 1645:                            cl[i] = ne_test;
+       58: 1645-block  0
+        -: 1646:                        }
+        -: 1647:                    }
+        -: 1648:                }else//  if queen ,a traité
+        -: 1649:                {
+    #####: 1650:                    cellule2 *aa=NULL;
+    #####: 1651:                    cellule2 *aa1= crrer_initailiser_ccellule2(0,row,col);
+    %%%%%: 1651-block  0
+call    0 never executed
+        -: 1652:                    int c,d,k,l;
+    #####: 1653:                    for(j=1;j<=4;j++)
+    %%%%%: 1653-block  0
+    %%%%%: 1653-block  1
+branch  0 never executed
+branch  1 never executed
+        -: 1654:                    {
+    #####: 1655:                        aa=add_none_first(aa,j,etw,row,col);
+    %%%%%: 1655-block  0
+call    0 never executed
+    #####: 1656:                        first_one_or_two(NULL,&c,&d,j,CHKS_OWNER_TWO,1,etw,row,col);
+call    0 never executed
+    #####: 1657:                        if(c==-1 && d==-1)continue;
+branch  0 never executed
+branch  1 never executed
+    %%%%%: 1657-block  0
+branch  2 never executed
+branch  3 never executed
+    %%%%%: 1657-block  1
+        -: 1658:                        else //construire l'arbre pour le champ
+        -: 1659:                        {
+    #####: 1660:                            aa1=queen_arbre1(aa1,j,etw,c,d,
+    %%%%%: 1660-block  0
+call    0 never executed
+        -: 1661:                                             CHKS_OWNER_TWO,CHKS_OWNER_ONE);
+        -: 1662:                        }
+    #####: 1663:                        aa=inserer_debut(aa,aa1);
+call    0 never executed
+        -: 1664:                    }
+    #####: 1665:                    cl[i]=aa;
+    %%%%%: 1665-block  0
+        -: 1666:                }
+        -: 1667:            }
+      137: 1668:            break;
+      137: 1668-block  0
+       18: 1669:        case CHKS_OWNER_TWO://cas de la machine
+       18: 1670:            taille=etw->machine->nbr_piece_disp;
+       18: 1671:            cl=(cellule2**) malloc(sizeof (cellule2*)*taille);
+       18: 1672:            if(!cl)
+       18: 1672-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 18
+        -: 1673:            {
+    #####: 1674:                printf("error allocation");
+    %%%%%: 1674-block  0
+call    0 never executed
+    #####: 1675:                exit(-1);
+call    0 never executed
+        -: 1676:            }
+      234: 1677:            for(n=0;n<taille;n++)cl[n]=NULL;
+       18: 1677-block  0
+      216: 1677-block  1
+      234: 1677-block  2
+branch  0 taken 216
+branch  1 taken 18 (fallthrough)
+      234: 1678:            for(i=0;i<taille;i++)
+       18: 1678-block  0
+      216: 1678-block  1
+      234: 1678-block  2
+branch  0 taken 216
+branch  1 taken 18 (fallthrough)
+        -: 1679:            {
+      216: 1680:                row=etw->machine->Tab[i].x;
+      216: 1681:                col=etw->machine->Tab[i].y;
+      216: 1682:                if(!etw->filed[row-1][col-1]->is_queen)
+      216: 1682-block  0
+branch  0 taken 207 (fallthrough)
+branch  1 taken 9
+        -: 1683:                {
+      207: 1684:                    if( (row-1-1>=0) && (col-1-1>=0))
+      207: 1684-block  0
+branch  0 taken 207 (fallthrough)
+branch  1 taken 0
+      207: 1684-block  1
+branch  2 taken 171 (fallthrough)
+branch  3 taken 36
+        -: 1685:                    {
+      171: 1686:                        if(etw->filed[row-1-1][col-1-1]->owner==CHKS_OWNER_NONE)//left
+      171: 1686-block  0
+branch  0 taken 75 (fallthrough)
+branch  1 taken 96
+       75: 1687:                            cl[i]=inserer_fin_liste(cl[i],0,row-1,col-1);
+       75: 1687-block  0
+call    0 returned 75
+        -: 1688:                    }
+      207: 1689:                    if((row-1-1>=0) && (col+1-1<=7))
+      207: 1689-block  0
+branch  0 taken 207 (fallthrough)
+branch  1 taken 0
+      207: 1689-block  1
+branch  2 taken 186 (fallthrough)
+branch  3 taken 21
+        -: 1690:                    {
+      186: 1691:                        if(etw->filed[row-1-1][col+1-1]->owner==CHKS_OWNER_NONE)//right
+      186: 1691-block  0
+branch  0 taken 61 (fallthrough)
+branch  1 taken 125
+       61: 1692:                            cl[i]=inserer_fin_liste(cl[i],0,row-1,col+1);
+       61: 1692-block  0
+call    0 returned 61
+        -: 1693:                    }
+      207: 1694:                    cellule2 *ne_test= crrer_initailiser_ccellule2(0,row,col);
+      207: 1694-block  0
+call    0 returned 207
+      207: 1695:                    ne_test=construire_arbre1(etw,ne_test,row,col);
+call    0 returned 207
+      207: 1696:                    if(ne_test->topleft || ne_test->topright)
+branch  0 taken 202 (fallthrough)
+branch  1 taken 5
+      202: 1696-block  0
+branch  2 taken 3 (fallthrough)
+branch  3 taken 199
+        -: 1697:                    {
+        8: 1698:                        if(!cl[i])  cl[i]=ne_test;
+        8: 1698-block  0
+branch  0 taken 3 (fallthrough)
+branch  1 taken 5
+        3: 1698-block  1
+        -: 1699:                        else {
+        5: 1700:                            ne_test->suiv = cl[i];
+        5: 1701:                            cl[i] = ne_test;
+        5: 1701-block  0
+        -: 1702:                        }
+        -: 1703:                    }
+        -: 1704:                }else//  if queen ,a traité
+        -: 1705:                {
+        9: 1706:                    cellule2 *aa=NULL;
+        9: 1707:                    cellule2 *aa1= crrer_initailiser_ccellule2(0,row,col);
+        9: 1707-block  0
+call    0 returned 9
+        -: 1708:                    int c,d,k,l;
+       45: 1709:                    for(j=1;j<=4;j++)
+       36: 1709-block  0
+       45: 1709-block  1
+branch  0 taken 36
+branch  1 taken 9 (fallthrough)
+        -: 1710:                    {
+       36: 1711:                        aa=add_none_first(aa,j,etw,row,col);
+       36: 1711-block  0
+call    0 returned 36
+       36: 1712:                        first_one_or_two(NULL,&c,&d,j,CHKS_OWNER_ONE,1,etw,row,col);
+call    0 returned 36
+       36: 1713:                        if(c==-1 && d==-1)continue;
+branch  0 taken 33 (fallthrough)
+branch  1 taken 3
+       33: 1713-block  0
+branch  2 taken 33 (fallthrough)
+branch  3 taken 0
+       33: 1713-block  1
+        -: 1714:                        else //construire l'arbre pour le champ
+        -: 1715:                        {
+        -: 1716:                            //(c) et la ligne de primiere one et (d) sa colonon
+        3: 1717:                            aa1=queen_arbre1(aa1,j,etw,c,d,CHKS_OWNER_ONE,CHKS_OWNER_TWO);
+        3: 1717-block  0
+call    0 returned 3
+        -: 1718:                        }
+        3: 1719:                        aa=inserer_debut(aa,aa1);
+call    0 returned 3
+        -: 1720:                    }
+        9: 1721:                    cl[i]=aa;
+        9: 1721-block  0
+        -: 1722:                }
+        -: 1723:            }
+       18: 1724:            break;
+       18: 1724-block  0
+        -: 1725:    }
+      155: 1726:    return (cellule2**)cl;
+      155: 1726-block  0
+        -: 1727:}
+        -: 1728:
+function crrer_initialiser_cellule7 called 210142319 returned 100% blocks executed 60%
+210142319: 1729:cellule7 *crrer_initialiser_cellule7(int x,int y)
+        -: 1730:{
+210142319: 1731:    cellule7 *ne=(cellule7*)malloc(sizeof (cellule7));
+210142319: 1732:    if(!ne)
+210142319: 1732-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 210142319
+        -: 1733:    {
+    #####: 1734:        printf("error allocation");
+    %%%%%: 1734-block  0
+call    0 never executed
+    #####: 1735:        exit(-1);
+call    0 never executed
+        -: 1736:    }
+210142319: 1737:    ne->suiv=NULL;
+210142319: 1738:    return (cellule7*)ne;
+210142319: 1738-block  0
+        -: 1739:}
+        -: 1740:
+function inserer_fin_liste_cellule7 called 210142319 returned 100% blocks executed 100%
+210142319: 1741:cellule7 *inserer_fin_liste_cellule7(cellule7 *liste,cellule7 *ne1)
+        -: 1742:{
+210142319: 1743:    if(!liste)return (cellule7 *)ne1;
+210142319: 1743-block  0
+branch  0 taken 105071620 (fallthrough)
+branch  1 taken 105070699
+105071620: 1743-block  1
+105070699: 1744:    if(!liste->suiv)
+105070699: 1744-block  0
+branch  0 taken 105070660 (fallthrough)
+branch  1 taken 39
+        -: 1745:    {
+105070660: 1746:        liste->suiv=ne1;
+105070660: 1747:        return (cellule7 *)liste;
+105070660: 1747-block  0
+        -: 1748:    }
+        -: 1749:    cellule7 *p,*q;
+       39: 1750:    p=liste;
+       39: 1751:    q=liste;
+      121: 1752:    while (p)
+       39: 1752-block  0
+      121: 1752-block  1
+branch  0 taken 82
+branch  1 taken 39 (fallthrough)
+        -: 1753:    {
+       82: 1754:        q=p;
+       82: 1755:        p=p->suiv;
+       82: 1755-block  0
+        -: 1756:    }
+       39: 1757:    q->suiv=ne1;
+       39: 1758:    return (cellule7 *)liste;
+       39: 1758-block  0
+        -: 1759:}
+        -: 1760:
+function creer_intialiser_cellule5 called 105071620 returned 100% blocks executed 83%
+105071620: 1761:cellule5 *creer_intialiser_cellule5(cellule7 *ll,int numfield)
+        -: 1762:{
+105071620: 1763:    cellule5 *ne=(cellule5*)malloc(sizeof(cellule5));
+105071620: 1764:    ne->liste=NULL;
+105071620: 1765:    if(!ne)
+105071620: 1765-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 105071620
+        -: 1766:    {
+    #####: 1767:        printf("error allocation");
+    %%%%%: 1767-block  0
+call    0 never executed
+    #####: 1768:        exit(-1);
+call    0 never executed
+        -: 1769:    }
+        -: 1770:    cellule7 *p;
+        -: 1771:    cellule7 *ne1;
+105071620: 1772:    p=ll;
+315213939: 1773:    while (p)
+105071620: 1773-block  0
+315213939: 1773-block  1
+branch  0 taken 210142319
+branch  1 taken 105071620 (fallthrough)
+        -: 1774:    {
+210142319: 1775:        ne1=crrer_initialiser_cellule7(p->x,p->y);
+210142319: 1775-block  0
+call    0 returned 210142319
+210142319: 1776:        ne->liste=inserer_fin_liste_cellule7(ne->liste,ne1);
+call    0 returned 210142319
+210142319: 1777:        p=p->suiv;
+        -: 1778:    }
+105071620: 1779:    while (p)
+105071620: 1779-block  0
+105071620: 1779-block  1
+branch  0 taken 0
+branch  1 taken 105071620 (fallthrough)
+        -: 1780:    {
+        -: 1781:
+        -: 1782:    }
+105071620: 1783:    ne->liste=ll;
+105071620: 1784:    ne->numfield=numfield;
+105071620: 1785:    ne->suiv=NULL;
+105071620: 1786:    return (cellule5*)ne;
+105071620: 1786-block  0
+        -: 1787:}
+        -: 1788:
+function createCellule1 called 210142321 returned 100% blocks executed 75%
+210142321: 1789:cellule7 *createCellule1(int x, int y)
+        -: 1790:{
+210142321: 1791:    cellule7 *newCell = (cellule7 *)malloc(sizeof(cellule7));
+210142321*: 1792:    if (!newCell) exit(0);
+210142321: 1792-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 210142321
+    %%%%%: 1792-block  1
+call    2 never executed
+210142321: 1793:    newCell->x = x;
+210142321: 1794:    newCell->y = y;
+210142321: 1795:    newCell->suiv = NULL;
+210142321: 1796:    return ((cellule7 *)newCell);
+210142321: 1796-block  0
+        -: 1797:}
+        -: 1798:
+function addToEndOfListe called 210142321 returned 100% blocks executed 100%
+210142321: 1799:cellule7 *addToEndOfListe (cellule7 *liste, int x, int y)
+        -: 1800:{
+210142321: 1801:    cellule7 *ptr = liste;
+210142321: 1802:    if (!liste) return ((cellule7 *)createCellule1(x, y));
+210142321: 1802-block  0
+branch  0 taken 105071621 (fallthrough)
+branch  1 taken 105070700
+105071621: 1802-block  1
+call    2 returned 105071621
+105070743: 1803:    while (ptr->suiv) ptr = ptr->suiv;
+105070700: 1803-block  0
+       43: 1803-block  1
+105070743: 1803-block  2
+branch  0 taken 43
+branch  1 taken 105070700 (fallthrough)
+105070700: 1804:    ptr->suiv = createCellule1(x, y);
+105070700: 1804-block  0
+call    0 returned 105070699
+105070699: 1805:    return ((cellule7 *)liste);
+        -: 1806:}
+        -: 1807:
+function createCelluleList called 105071620 returned 100% blocks executed 75%
+105071620: 1808:CelluleList *createCelluleList (cellule7 *liste)
+        -: 1809:{
+105071620: 1810:    CelluleList *newCellList = (CelluleList *)malloc(sizeof(CelluleList));
+105071620*: 1811:    if (!newCellList) exit(0);
+105071620: 1811-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 105071620
+    %%%%%: 1811-block  1
+call    2 never executed
+105071620: 1812:    newCellList->liste = liste;
+105071620: 1813:    newCellList->suiv = NULL;
+105071620: 1814:    return ((CelluleList *)newCellList);
+105071620: 1814-block  0
+        -: 1815:}
+        -: 1816:
+function addList called 105071620 returned 100% blocks executed 100%
+105071620: 1817:CelluleList *addList (CelluleList *listes, cellule7 *liste)
+        -: 1818:{
+105071620: 1819:    CelluleList *newList = createCelluleList(liste);
+105071620: 1819-block  0
+call    0 returned 105071620
+105071620: 1820:    if (listes) newList->suiv = listes;
+branch  0 taken 52535266 (fallthrough)
+branch  1 taken 52536354
+ 52535266: 1820-block  0
+105071620: 1821:    return ((CelluleList *)newList);
+105071620: 1821-block  0
+        -: 1822:}
+        -: 1823:
+        -: 1824:
+        -: 1825:// Fonction récursive pour trouver tous les chemins d'un arbre binaire
+function findPaths called 788035254 returned 100% blocks executed 100%
+788035254: 1826:CelluleList *findPaths (cellule2 *node, int path[2][8], int pathLength, CelluleList *listes)
+        -: 1827:{
+788035254: 1828:    if (node == NULL) return ((CelluleList *)listes);
+788035254: 1828-block  0
+branch  0 taken 630428202 (fallthrough)
+branch  1 taken 157607052
+630428202: 1828-block  1
+        -: 1829:
+        -: 1830:    // Ajouter le noeud actuel au chemin
+157607052: 1831:    path[0][pathLength] = node->row;
+157607052: 1832:    path[1][pathLength] = node->col;
+157607052: 1833:    pathLength++;
+        -: 1834:
+        -: 1835:    // Si le noeud actuel est une feuille, imprimer le chemin
+157607052: 1836:    if (node->topleft == NULL && node->topright == NULL &&
+157607052: 1836-block  0
+branch  0 taken 157606949 (fallthrough)
+branch  1 taken 103
+157606949: 1836-block  1
+branch  2 taken 157606881 (fallthrough)
+branch  3 taken 68
+157606881: 1837:        node->butleft == NULL && node->butright == NULL)
+157606881: 1837-block  0
+branch  0 taken 105071621 (fallthrough)
+branch  1 taken 52535260
+105071621: 1837-block  1
+branch  2 taken 105071621 (fallthrough)
+branch  3 taken 0
+        -: 1838:    {
+105071621: 1839:        cellule7 *newList = NULL;
+315213941: 1840:        for (int i = 0; i < pathLength; i++) newList = addToEndOfListe(newList, path[0][i], path[1][i]);
+105071621: 1840-block  0
+210142321: 1840-block  1
+call    0 returned 210142320
+315213941: 1840-block  2
+branch  1 taken 210142321
+branch  2 taken 105071620 (fallthrough)
+105071620: 1841:        listes = addList(listes, newList);
+105071620: 1841-block  0
+call    0 returned 105071620
+        -: 1842:    }
+        -: 1843:
+        -: 1844:    // Sinon, explorer les sous-arbres de manière récursive
+157607051: 1845:    listes = findPaths(node->topleft, path, pathLength, listes);
+157607051: 1845-block  0
+call    0 returned 157607051
+157607051: 1846:    listes = findPaths(node->topright, path, pathLength, listes);
+call    0 returned 157607051
+157607051: 1847:    listes = findPaths(node->butleft, path, pathLength, listes);
+call    0 returned 157607050
+157607050: 1848:    listes = findPaths(node->butright, path, pathLength, listes);
+call    0 returned 157607050
+157607050: 1849:    if (pathLength != 1) listes = findPaths(node->suiv, path, pathLength-1, listes);
+branch  0 taken 105070696 (fallthrough)
+branch  1 taken 52536354
+105070696: 1849-block  0
+call    2 returned 105070696
+157607050: 1850:    return ((CelluleList *)listes);
+157607050: 1850-block  0
+        -: 1851:}
+        -: 1852:
+        -: 1853:
+        -: 1854:
+function insert_into_cellule5_liste called 105071620 returned 100% blocks executed 100%
+105071620: 1855:cellule5 *insert_into_cellule5_liste(cellule5 *list,cellule5 *ne)
+        -: 1856:{
+105071620: 1857:    if(!list)return (cellule5*)ne;
+105071620: 1857-block  0
+branch  0 taken 155 (fallthrough)
+branch  1 taken 105071465
+      155: 1857-block  1
+105071465: 1858:    ne->suiv=list;
+105071465: 1859:    list=ne;
+105071465: 1860:    return (cellule5*)list;
+105071465: 1860-block  0
+        -: 1861:}
+        -: 1862:
+function generate_all_path called 155 returned 99% blocks executed 100%
+      155: 1863:cellule5 *generate_all_path(cellule2 **cl,int taille)
+        -: 1864:{
+      155: 1865:    cellule5 *list=NULL;
+        -: 1866:    int path[2][8];
+      155: 1867:    int pathLength = 0;
+        -: 1868:    cellule5 *ne;
+        -: 1869:    int i;
+     1510: 1870:    for(i=0;i<taille;i++)
+      155: 1870-block  0
+     1355: 1870-block  1
+     1510: 1870-block  2
+branch  0 taken 1356
+branch  1 taken 154 (fallthrough)
+        -: 1871:    {
+        -: 1872:        cellule2 *p;
+     1356: 1873:        p=cl[i];
+ 52537710: 1874:        while (p)
+     1356: 1874-block  0
+ 52537710: 1874-block  1
+branch  0 taken 52536355
+branch  1 taken 1355 (fallthrough)
+        -: 1875:        {
+ 52536355: 1876:            CelluleList *l1=NULL;
+ 52536355: 1877:            l1=findPaths(p,path,pathLength,l1);
+ 52536355: 1877-block  0
+call    0 returned 52536354
+        -: 1878:            CelluleList *p1;
+ 52536354: 1879:            p1=l1;
+157607974: 1880:            while (p1)//probleme ici
+157607974: 1880-block  0
+branch  0 taken 105071620
+branch  1 taken 52536354 (fallthrough)
+        -: 1881:            {//
+105071620: 1882:                ne= creer_intialiser_cellule5(p1->liste,i);
+105071620: 1882-block  0
+call    0 returned 105071620
+105071620: 1883:                list=insert_into_cellule5_liste(list,ne);
+call    0 returned 105071620
+105071620: 1884:                p1=p1->suiv;
+        -: 1885:            }
+ 52536354: 1886:            p=p->suiv;
+ 52536354: 1886-block  0
+        -: 1887:        }
+        -: 1888:
+        -: 1889:    }
+      154: 1890:    return (cellule5*)list;
+      154: 1890-block  0
+        -: 1891:}
+        -: 1892:
+function maximun_cellule5 called 17 returned 100% blocks executed 100%
+       17: 1893:int maximun_cellule5(cellule5 *ll)
+        -: 1894:{
+       17: 1895:    int max=ll->score;
+        -: 1896:    cellule5 *p;
+       17: 1897:    p=ll;
+      154: 1898:    while (p)
+       17: 1898-block  0
+      154: 1898-block  1
+branch  0 taken 137
+branch  1 taken 17 (fallthrough)
+        -: 1899:    {
+      137: 1900:        if(max<=p->score)max=p->score;
+      137: 1900-block  0
+branch  0 taken 76 (fallthrough)
+branch  1 taken 61
+       76: 1900-block  1
+      137: 1901:        p=p->suiv;
+      137: 1901-block  0
+        -: 1902:    }
+       17: 1903:    return (int)max;
+       17: 1903-block  0
+        -: 1904:}
+function minimun_cellule5 called 137 returned 100% blocks executed 100%
+      137: 1905:int minimun_cellule5(cellule5 *ll)
+        -: 1906:{
+      137: 1907:    int min=ll->score;
+        -: 1908:    cellule5 *p;
+      137: 1909:    p=ll;
+     1093: 1910:    while (p)
+      137: 1910-block  0
+     1093: 1910-block  1
+branch  0 taken 956
+branch  1 taken 137 (fallthrough)
+        -: 1911:    {
+      956: 1912:        if(min>=p->score)min=p->score;
+      956: 1912-block  0
+branch  0 taken 641 (fallthrough)
+branch  1 taken 315
+      641: 1912-block  1
+      956: 1913:        p=p->suiv;
+      956: 1913-block  0
+        -: 1914:    }
+      137: 1915:    return (int)min;
+      137: 1915-block  0
+        -: 1916:}
+        -: 1917:
+        -: 1918:
+function recognise_fin_list called 1110 returned 100% blocks executed 100%
+     1110: 1919:cellule *recognise_fin_list(cellule *list,cellule *T[1])
+        -: 1920:{
+     1110: 1921:    if(!list->suiv)
+     1110: 1921-block  0
+branch  0 taken 962 (fallthrough)
+branch  1 taken 148
+        -: 1922:    {
+      962: 1923:        T[0]=list;
+      962: 1924:        return (cellule*)list;
+      962: 1924-block  0
+        -: 1925:    }
+        -: 1926:    cellule *p;
+      148: 1927:    p=list;
+      336: 1928:    while (p->suiv)p=p->suiv;
+      148: 1928-block  0
+      188: 1928-block  1
+      336: 1928-block  2
+branch  0 taken 188
+branch  1 taken 148 (fallthrough)
+      148: 1929:    T[0]=p;
+      148: 1930:    return (cellule*)list;
+      148: 1930-block  0
+        -: 1931:}
+        -: 1932:
+function transfert_cellule7_cellule called 1110 returned 100% blocks executed 100%
+     1110: 1933:void transfert_cellule7_cellule(File *f,cellule7 *list)
+        -: 1934:{
+        -: 1935:    cellule *T[1];
+        -: 1936:    cellule7 *p2;
+     1110: 1937:    p2=list;
+     1110: 1938:    cellule *nn=NULL;
+     2408: 1939:    while (p2)
+     1110: 1939-block  0
+     2408: 1939-block  1
+branch  0 taken 1298
+branch  1 taken 1110 (fallthrough)
+        -: 1940:    {
+     1298: 1941:        nn=inserer_fin_liste_cellule(nn,p2->x,p2->y);
+     1298: 1941-block  0
+call    0 returned 1298
+     1298: 1942:        p2=p2->suiv;
+        -: 1943:    }
+     1110: 1944:    nn=recognise_fin_list(nn,T);
+     1110: 1944-block  0
+call    0 returned 1110
+     1110: 1945:    f->tete=nn;
+     1110: 1946:    f->queue=T[0];
+     1110: 1947:}
+        -: 1948:
+function change_row_col_piece called 1128 returned 100% blocks executed 100%
+     1128: 1949:void change_row_col_piece(etat_window *etw,ChksField *field,int lrow,int lcol,ChksOwner owner)
+        -: 1950:{
+        -: 1951:    int i;
+     1128: 1952:    if(!etw)
+     1128: 1952-block  0
+branch  0 taken 35 (fallthrough)
+branch  1 taken 1093
+        -: 1953:    {
+       35: 1954:        switch (owner) {
+       35: 1954-block  0
+branch  0 taken 18
+branch  1 taken 17
+branch  2 taken 0
+       18: 1955:            case CHKS_OWNER_ONE:
+      173: 1956:                for(i=0;i<field->view_table->user->nbr_piece_disp;i++)
+       18: 1956-block  0
+      155: 1956-block  1
+      173: 1956-block  2
+branch  0 taken 155
+branch  1 taken 18 (fallthrough)
+        -: 1957:                {
+      155: 1958:                    if(field->view_table->user->Tab[i].x==lrow &&
+      155: 1958-block  0
+branch  0 taken 46 (fallthrough)
+branch  1 taken 109
+       46: 1959:                       field->view_table->user->Tab[i].y==lcol)
+       46: 1959-block  0
+branch  0 taken 18 (fallthrough)
+branch  1 taken 28
+        -: 1960:                    {
+       18: 1961:                        field->view_table->user->Tab[i].x=field->row;
+       18: 1962:                        field->view_table->user->Tab[i].y=field->col;
+       18: 1962-block  0
+        -: 1963:                    }
+        -: 1964:                }
+       18: 1965:                break;
+       18: 1965-block  0
+       17: 1966:            case CHKS_OWNER_TWO:
+      221: 1967:                for(i=0;i<field->view_table->machine->nbr_piece_disp;i++)
+       17: 1967-block  0
+      204: 1967-block  1
+      221: 1967-block  2
+branch  0 taken 204
+branch  1 taken 17 (fallthrough)
+        -: 1968:                {
+      204: 1969:                    if(field->view_table->machine->Tab[i].x==lrow &&
+      204: 1969-block  0
+branch  0 taken 48 (fallthrough)
+branch  1 taken 156
+       48: 1970:                       field->view_table->machine->Tab[i].y==lcol)
+       48: 1970-block  0
+branch  0 taken 17 (fallthrough)
+branch  1 taken 31
+        -: 1971:                    {
+       17: 1972:                        field->view_table->machine->Tab[i].x=field->row;
+       17: 1973:                        field->view_table->machine->Tab[i].y=field->col;
+       17: 1973-block  0
+        -: 1974:                    }
+        -: 1975:                }
+       17: 1976:                break;
+       17: 1976-block  0
+        -: 1977:        }
+        -: 1978:    }else
+        -: 1979:    {
+     1093: 1980:        switch (owner) {
+     1093: 1980-block  0
+branch  0 taken 956
+branch  1 taken 137
+branch  2 taken 0
+      956: 1981:            case CHKS_OWNER_ONE:
+     9373: 1982:                for(i=0;i<etw->user->nbr_piece_disp;i++)
+      956: 1982-block  0
+     8417: 1982-block  1
+     9373: 1982-block  2
+branch  0 taken 8417
+branch  1 taken 956 (fallthrough)
+        -: 1983:                {
+     8417: 1984:                    if(etw->user->Tab[i].x==lrow &&
+     8417: 1984-block  0
+branch  0 taken 2439 (fallthrough)
+branch  1 taken 5978
+     2439: 1985:                       etw->user->Tab[i].y==lcol)
+     2439: 1985-block  0
+branch  0 taken 956 (fallthrough)
+branch  1 taken 1483
+        -: 1986:                    {
+      956: 1987:                        etw->user->Tab[i].x=field->row;
+      956: 1988:                        etw->user->Tab[i].y=field->col;
+      956: 1988-block  0
+        -: 1989:                    }
+        -: 1990:                }
+      956: 1991:                break;
+      956: 1991-block  0
+      137: 1992:            case CHKS_OWNER_TWO:
+     1781: 1993:                for(i=0;i<etw->machine->nbr_piece_disp;i++)
+      137: 1993-block  0
+     1644: 1993-block  1
+     1781: 1993-block  2
+branch  0 taken 1644
+branch  1 taken 137 (fallthrough)
+        -: 1994:                {
+     1644: 1995:                    if(etw->machine->Tab[i].x==lrow &&
+     1644: 1995-block  0
+branch  0 taken 364 (fallthrough)
+branch  1 taken 1280
+      364: 1996:                       etw->machine->Tab[i].y==lcol)
+      364: 1996-block  0
+branch  0 taken 137 (fallthrough)
+branch  1 taken 227
+        -: 1997:                    {
+      137: 1998:                        etw->machine->Tab[i].x=field->row;
+      137: 1999:                        etw->machine->Tab[i].y=field->col;
+      137: 1999-block  0
+        -: 2000:                    }
+        -: 2001:                }
+      137: 2002:                break;
+      137: 2002-block  0
+        -: 2003:        }
+        -: 2004:    }
+     1128: 2005:}
+        -: 2006:
+        -: 2007:
+function Minmaxalgorithm called 1111 returned 100% blocks executed 94%
+     1111: 2008:int Minmaxalgorithm(ChksOwner owner,int depth,etat_window *etw,bestpath *bs)
+        -: 2009:{
+        -: 2010:    int max,min,row,col,rowdest,coldest;
+        -: 2011:    GtkStyleContext* context;
+     1111: 2012:    if(depth==0)
+     1111: 2012-block  0
+branch  0 taken 956 (fallthrough)
+branch  1 taken 155
+      956: 2013:        return (int)(etw->machine->nbr_piece_disp-etw->user->nbr_piece_disp);
+      956: 2013-block  0
+      155: 2014:    if(owner==CHKS_OWNER_ONE) //user
+      155: 2014-block  0
+branch  0 taken 137 (fallthrough)
+branch  1 taken 18
+        -: 2015:    {
+      137: 2016:        cellule2 **cl=NULL;
+      137: 2017:        cl=table_arbre_shemin(cl,etw,CHKS_OWNER_ONE);
+      137: 2017-block  0
+call    0 returned 137
+      137: 2018:        cellule5 *ll=NULL;
+      137: 2019:        ll=generate_all_path(cl,etw->user->nbr_piece_disp);
+call    0 returned 137
+        -: 2020:        cellule5 *p;
+      137: 2021:        p=ll;
+     1093: 2022:        while (p)
+     1093: 2022-block  0
+branch  0 taken 956
+branch  1 taken 137 (fallthrough)
+        -: 2023:        {
+      956: 2024:            etat_window *etw1=creer_intialiser_etat_window();
+      956: 2024-block  0
+call    0 returned 956
+      956: 2025:            copie_win_field1(etw,etw1);
+call    0 returned 956
+        -: 2026:            //effectuer le mouvement sur etw1
+      956: 2027:            File *f=creer_initaliser_file();
+call    0 returned 956
+      956: 2028:            transfert_cellule7_cellule(f,p->liste);
+call    0 returned 956
+        -: 2029:            ChksField *last;
+        -: 2030:            ChksField *field;
+      956: 2031:            row=etw1->user->Tab[p->numfield].x;
+      956: 2032:            col=etw1->user->Tab[p->numfield].y;
+      956: 2033:            last=etw1->filed[row-1][col-1];
+      956: 2034:            rowdest=f->queue->row;
+      956: 2035:            coldest=f->queue->col;
+      956: 2036:            field = etw1->filed[rowdest - 1][coldest - 1];
+      956: 2037:            if(f->tete!=f->queue) {//plusieurs deplacement
+branch  0 taken 134 (fallthrough)
+branch  1 taken 822
+      134: 2038:                drop_two_betwen_fl_lt1(etw1, f, CHKS_OWNER_TWO,row,col,rowdest,coldest);
+      134: 2038-block  0
+call    0 returned 134
+        -: 2039:            }
+        -: 2040:            else //un seul deplacement
+        -: 2041:            {
+      822: 2042:                drop_two_betwen_fl_lt1(etw1,NULL,CHKS_OWNER_TWO,row,col,rowdest,coldest);
+      822: 2042-block  0
+call    0 returned 822
+        -: 2043:            }
+      956: 2044:            if(rowdest==8)field->is_queen=TRUE;
+      956: 2044-block  0
+branch  0 taken 10 (fallthrough)
+branch  1 taken 946
+       10: 2044-block  1
+      956: 2045:            last->owner=CHKS_OWNER_NONE;
+      956: 2046:            field->owner=CHKS_OWNER_ONE;
+      956: 2047:            change_row_col_piece(etw1,field,row,col,CHKS_OWNER_ONE);
+      956: 2047-block  0
+call    0 returned 956
+      956: 2048:            p->score=Minmaxalgorithm(CHKS_OWNER_TWO,depth-1,etw1,bs);
+call    0 returned 956
+      956: 2049:            p=p->suiv;
+        -: 2050:        }
+      137: 2051:        if(ll)min=minimun_cellule5(ll);
+      137: 2051-block  0
+branch  0 taken 137 (fallthrough)
+branch  1 taken 0
+      137: 2051-block  1
+call    2 returned 137
+    #####: 2052:        else return (int)2222;//rien a deplacer pour user donc c'est le bon chemin a effectuer
+    %%%%%: 2052-block  0
+      137: 2053:        return (int)min;
+       18: 2054:    }else if(owner==CHKS_OWNER_TWO)//machine
+       18: 2054-block  0
+branch  0 taken 18 (fallthrough)
+branch  1 taken 0
+        -: 2055:    {
+       18: 2056:        cellule2 **cl=NULL;
+        -: 2057:        //creer la table des chemein de la machine sur l'etat actuelle ede la table
+       18: 2058:        cl=table_arbre_shemin(cl,etw,CHKS_OWNER_TWO);
+       18: 2058-block  0
+call    0 returned 18
+       18: 2059:        cellule5 *ll=NULL;
+        -: 2060:        //generer les chemin de chaque piece est les stocker dans une liste de liste
+       18: 2061:        ll=generate_all_path(cl,etw->machine->nbr_piece_disp);
+call    0 returned 17
+        -: 2062:        cellule5 *p;
+       17: 2063:        p=ll;
+        -: 2064:        //boucler sur les chemin pour tout les piece et effectuer le mouvement
+      154: 2065:        while (p)
+      154: 2065-block  0
+branch  0 taken 137
+branch  1 taken 17 (fallthrough)
+        -: 2066:        {
+      137: 2067:            etat_window *etw1=creer_intialiser_etat_window();
+      137: 2067-block  0
+call    0 returned 137
+      137: 2068:            copie_win_field1(etw,etw1);
+call    0 returned 137
+        -: 2069:            //effectuer le mouvement sur etw1
+      137: 2070:            File *f=creer_initaliser_file();
+call    0 returned 137
+      137: 2071:            transfert_cellule7_cellule(f,p->liste);
+call    0 returned 137
+        -: 2072:            ChksField *last;
+        -: 2073:            ChksField *field;
+      137: 2074:            row=etw1->machine->Tab[p->numfield].x;//source row
+      137: 2075:            col=etw1->machine->Tab[p->numfield].y;//source col
+      137: 2076:            last=etw1->filed[row-1][col-1];
+      137: 2077:            rowdest=f->queue->row;//destination row
+      137: 2078:            coldest=f->queue->col;//destination col
+      137: 2079:            field = etw1->filed[rowdest - 1][coldest - 1];
+      137: 2080:            if(f->tete!=f->queue)
+branch  0 taken 8 (fallthrough)
+branch  1 taken 129
+        -: 2081:            {//plusieurs deplacement
+        8: 2082:                drop_two_betwen_fl_lt1(etw1, f, CHKS_OWNER_ONE,row,col,rowdest,coldest);
+        8: 2082-block  0
+call    0 returned 8
+        -: 2083:            }
+        -: 2084:            else //un seule deplacement
+        -: 2085:            {
+      129: 2086:                drop_two_betwen_fl_lt1(etw1,NULL,CHKS_OWNER_ONE,row,col,rowdest,coldest);
+      129: 2086-block  0
+call    0 returned 129
+        -: 2087:            }
+      137: 2088:            if(rowdest==1)field->is_queen=TRUE;
+      137: 2088-block  0
+branch  0 taken 11 (fallthrough)
+branch  1 taken 126
+       11: 2088-block  1
+      137: 2089:            last->owner=CHKS_OWNER_NONE;
+      137: 2090:            field->owner=CHKS_OWNER_TWO;
+        -: 2091:            //last est la destination
+      137: 2092:            change_row_col_piece(etw1,field,row,col,CHKS_OWNER_TWO);
+      137: 2092-block  0
+call    0 returned 137
+      137: 2093:            p->score=Minmaxalgorithm(CHKS_OWNER_ONE,depth-1,etw1,bs);
+call    0 returned 137
+      137: 2094:            p=p->suiv;
+        -: 2095:        }
+       17: 2096:        if(ll)max=maximun_cellule5(ll);
+       17: 2096-block  0
+branch  0 taken 17 (fallthrough)
+branch  1 taken 0
+       17: 2096-block  1
+call    2 returned 17
+    #####: 2097:        else return (int)-2222;//la machine ne peut pas effectuer un mouvement
+    %%%%%: 2097-block  0
+        -: 2098:        //il faut stocker le bon chemin dans best
+       17: 2099:        p=ll;
+       45: 2100:        while (p)
+       45: 2100-block  0
+branch  0 taken 45
+branch  1 taken 0 (fallthrough)
+        -: 2101:        {
+       45: 2102:            if(p->score==max)
+       45: 2102-block  0
+branch  0 taken 17 (fallthrough)
+branch  1 taken 28
+        -: 2103:            {
+       17: 2104:                transfert_cellule7_cellule(bs->best,p->liste);
+       17: 2104-block  0
+call    0 returned 17
+       17: 2105:                bs->numfield=p->numfield;
+       17: 2106:                bs->score=p->score;
+       17: 2107:                break;
+        -: 2108:            }
+       28: 2109:            p=p->suiv;
+       28: 2109-block  0
+        -: 2110:        }
+       17: 2111:        return (int)max;
+       17: 2111-block  0
+        -: 2112:    }
+    #####: 2113:}
+    %%%%%: 2113-block  0
+        -: 2114:
+function arbre_descicion called 18 returned 94% blocks executed 88%
+       18: 2115:void arbre_descicion(Glob *g)
+        -: 2116:{
+        -: 2117:    GtkStyleContext* context;
+        -: 2118:    cellule2 **cl;
+        -: 2119:    int row,col,rowdest,coldest,et;
+        -: 2120:    ChksField *last,*field;
+       18: 2121:    etat_window *etw=creer_intialiser_etat_window();
+       18: 2121-block  0
+call    0 returned 18
+       18: 2122:    copie_win_field(g->field->view_table,etw);
+call    0 returned 18
+       18: 2123:    bestpath *p=(bestpath*) malloc(sizeof (bestpath));
+       18: 2124:    p->best=creer_initaliser_file();
+call    0 returned 18
+       18: 2125:    et=Minmaxalgorithm(CHKS_OWNER_TWO,g->field->view_table->depth,etw,p);
+call    0 returned 17
+       17: 2126:    if(!p->best->tete)
+branch  0 taken 0 (fallthrough)
+branch  1 taken 17
+        -: 2127:    {
+        -: 2128:        //machine lose
+    #####: 2129:        g->field->view_table->machine->nbr_piece_disp=0;
+    #####: 2130:        return;
+    %%%%%: 2130-block  0
+        -: 2131:   }
+       17: 2132:    row=g->field->view_table->machine->Tab[p->numfield].x;
+       17: 2133:    col=g->field->view_table->machine->Tab[p->numfield].y;
+       17: 2134:    last=g->field->view_table->table->filed[row-1][col-1];
+       17: 2135:    rowdest=p->best->queue->row;
+       17: 2136:    coldest=p->best->queue->col;
+       17: 2137:    field = g->field->view_table->table->filed[rowdest - 1][coldest - 1];
+       17: 2138:    if(p->best->tete!=p->best->queue) {//plusieurs deplacement
+       17: 2138-block  0
+branch  0 taken 6 (fallthrough)
+branch  1 taken 11
+        6: 2139:        drop_two_betwen_fl_lt(last, field, p->best, CHKS_OWNER_ONE);
+        6: 2139-block  0
+call    0 returned 6
+        -: 2140:    }
+        -: 2141:    else //un seul deplacement
+        -: 2142:    {
+       11: 2143:        drop_two_betwen_fl_lt(last,field,NULL,CHKS_OWNER_ONE);
+       11: 2143-block  0
+call    0 returned 11
+        -: 2144:    }
+       17: 2145:    if(rowdest==1)field->is_queen=TRUE;
+       17: 2145-block  0
+branch  0 taken 2 (fallthrough)
+branch  1 taken 15
+        2: 2145-block  1
+       17: 2146:    last->owner=CHKS_OWNER_NONE;
+       17: 2147:    field->owner=CHKS_OWNER_TWO;
+       17: 2148:    change_row_col_piece(NULL,field,last->row,
+       17: 2148-block  0
+call    0 returned 17
+        -: 2149:                         last->col,CHKS_OWNER_TWO);
+       17: 2150:    apply_style_button(last->view_table->table->filed);
+call    0 returned 17
+        -: 2151:    //user lose
+       17: 2152:    if(p->score==2222)
+branch  0 taken 0 (fallthrough)
+branch  1 taken 17
+        -: 2153:    {
+    #####: 2154:        g->field->view_table->user->nbr_piece_disp=0;
+    %%%%%: 2154-block  0
+        -: 2155:    }
+        -: 2156:}
+        -: 2157:
+        -: 2158:
+        -: 2159:
+function effectuer_moumvment called 21 returned 95% blocks executed 59%
+       21: 2160:gboolean effectuer_moumvment(
+        -: 2161:        GtkWidget* self,
+        -: 2162:        GdkEventKey event,
+        -: 2163:        Glob *g)
+        -: 2164:{
+        -: 2165:    GtkStyleContext* context;
+       21: 2166:    if(event.keyval==GDK_KEY_e)
+       21: 2166-block  0
+branch  0 taken 21 (fallthrough)
+branch  1 taken 0
+        -: 2167:    {
+       21: 2168:        if(!g->f->tete)return TRUE;
+       21: 2168-block  0
+branch  0 taken 3 (fallthrough)
+branch  1 taken 18
+        3: 2168-block  1
+       18: 2169:        if(g->f->tete==g->f->queue)//un seule deplacement
+       18: 2169-block  0
+branch  0 taken 18 (fallthrough)
+branch  1 taken 0
+        -: 2170:        {
+       18: 2171:            if(techek_entred_piece(g->field,g->field->view_table->table->last,g->f))
+       18: 2171-block  0
+call    0 returned 18
+branch  1 taken 18 (fallthrough)
+branch  2 taken 0
+        -: 2172:            {
+        -: 2173:                //deplacement normal , il faut soustraire les piece attraper et traiter le cas de is queen
+        -: 2174:                // and change style
+       18: 2175:                drop_two_betwen_fl_lt(g->field->view_table->table->last,g->field,NULL,CHKS_OWNER_TWO);
+       18: 2175-block  0
+call    0 returned 18
+    #####: 2176:            }else return (int)0;
+    %%%%%: 2176-block  0
+        -: 2177:        }else//plusierurs deplacement
+        -: 2178:        {
+    #####: 2179:            File *ftmp=creer_initaliser_file();
+    %%%%%: 2179-block  0
+call    0 never executed
+    #####: 2180:            copy_file(g->f,ftmp);
+call    0 never executed
+    #####: 2181:            techek_entred_piece(g->field,g->field->view_table->table->last,g->f);
+call    0 never executed
+    #####: 2182:            if(g->f->tete==g->f->queue)
+branch  0 never executed
+branch  1 never executed
+        -: 2183:            {
+        -: 2184:                //deplacement long , il faut soustraire les piece attraper et traiter le cas de is queen
+    #####: 2185:                drop_two_betwen_fl_lt(g->field->view_table->table->last,g->field,ftmp,CHKS_OWNER_TWO);
+    %%%%%: 2185-block  0
+call    0 never executed
+    #####: 2186:            }else return (int)0;
+    %%%%%: 2186-block  0
+        -: 2187:        }
+       18: 2188:        if(g->field->row==8)
+       18: 2188-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 18
+    #####: 2189:            g->field->is_queen=TRUE;
+    %%%%%: 2189-block  0
+       18: 2190:        g->field->view_table->table->last->owner=CHKS_OWNER_NONE;
+       18: 2191:        g->field->owner=CHKS_OWNER_ONE;
+       18: 2192:        apply_style_button(g->field->view_table->table->filed);
+       18: 2192-block  0
+call    0 returned 18
+        -: 2193:        //changer row and col de field dans user ,
+       18: 2194:        change_row_col_piece(NULL,g->field,g->field->view_table->table->last->row,
+       18: 2195:                             g->field->view_table->table->last->col,CHKS_OWNER_ONE);
+call    0 returned 18
+       18: 2196:        g->field->view_table->table->last=NULL;
+       18: 2197:        arbre_descicion(g);
+call    0 returned 17
+       17: 2198:        if(g->field->view_table->user->nbr_piece_disp==0)
+branch  0 taken 0 (fallthrough)
+branch  1 taken 17
+        -: 2199:        {
+    #####: 2200:            gtk_header_bar_set_title(GTK_HEADER_BAR(g->field->view_table->header_bar),"Machine Win");
+    %%%%%: 2200-block  0
+call    0 never executed
+call    1 never executed
+       17: 2201:        }else if(g->field->view_table->machine->nbr_piece_disp==0) {
+       17: 2201-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 17
+    #####: 2202:            gtk_header_bar_set_title(GTK_HEADER_BAR(g->field->view_table->header_bar), "User Win");
+    %%%%%: 2202-block  0
+call    0 never executed
+call    1 never executed
+        -: 2203:        }
+       17: 2204:        vider_file(g->f);
+       17: 2204-block  0
+call    0 returned 17
+       17: 2205:        g->field=NULL;
+        -: 2206:
+        -: 2207:    }
+       17: 2208:    return (TRUE);
+       17: 2208-block  0
+        -: 2209:}
+        -: 2210:
+function add_filed_grid called 1 returned 100% blocks executed 100%
+        1: 2211:void add_filed_grid(Chkswindow *win,ChksField *fieled[8][8])
+        -: 2212:{
+        -: 2213:    GtkAccelGroup *accel_group;
+        1: 2214:    accel_group = gtk_accel_group_new ();
+        1: 2214-block  0
+call    0 returned 1
+        1: 2215:    gtk_window_add_accel_group (GTK_WINDOW (win->win), accel_group);
+call    0 returned 1
+call    1 returned 1
+        -: 2216:    GtkStyleContext* context;
+        -: 2217:    GtkCssProvider* provider;
+        1: 2218:    context = gtk_widget_get_style_context(win->table->gr);
+call    0 returned 1
+        1: 2219:    provider = gtk_css_provider_new();
+call    0 returned 1
+        1: 2220:    gtk_css_provider_load_from_path(GTK_CSS_PROVIDER(provider),"C:\\Users\\USER\\Desktop\\GTK\\Dame_game\\test.css",NULL);
+call    0 returned 1
+call    1 returned 1
+        1: 2221:    gtk_style_context_add_class(GTK_STYLE_CONTEXT(context),"chks-grid");
+call    0 returned 1
+call    1 returned 1
+        1: 2222:    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+call    0 returned 1
+call    1 returned 1
+        1: 2223:    gtk_grid_set_column_homogeneous(GTK_GRID(win->table->gr), TRUE);
+call    0 returned 1
+call    1 returned 1
+        1: 2224:    gtk_grid_set_row_homogeneous(GTK_GRID(win->table->gr), TRUE);
+call    0 returned 1
+call    1 returned 1
+        -: 2225:    int i,j;
+        9: 2226:    for(i=0;i<=7;i++) {
+        8: 2226-block  0
+        9: 2226-block  1
+branch  0 taken 8
+branch  1 taken 1 (fallthrough)
+       72: 2227:        for (j = 0; j <= 7; j++)
+        8: 2227-block  0
+       72: 2227-block  1
+branch  0 taken 64
+branch  1 taken 8 (fallthrough)
+        -: 2228:        {
+        -: 2229:            //j is column and i is row
+       64: 2230:            fieled[i][j]->view_table = win;
+       64: 2231:            gtk_grid_attach(GTK_GRID(win->table->gr), fieled[i][j]->button, j, i, 1, 1);
+       64: 2231-block  0
+call    0 returned 64
+call    1 returned 64
+       64: 2232:            g_signal_connect(fieled[i][j]->button,"clicked",G_CALLBACK(piece_cliecked),fieled[i][j]);
+call    0 returned 64
+       64: 2233:            g_signal_connect(fieled[i][j]->button,"leave",G_CALLBACK(piece_leaved),fieled[i][j]);
+call    0 returned 64
+       64: 2234:            g_signal_connect(fieled[i][j]->button,"enter",G_CALLBACK(piece_entered),fieled[i][j]);
+call    0 returned 64
+        -: 2235:        }
+        -: 2236:    }
+        -: 2237:
+        1: 2238:}
+        -: 2239:
+        -: 2240:
+function init_table called 1 returned 100% blocks executed 100%
+        1: 2241:void init_table(Chkswindow *win)
+        -: 2242:{
+        1: 2243:    int i,j,k=0,m=0;
+        -: 2244:    GtkStyleContext* context;
+        -: 2245:    GtkCssProvider* provider;
+        1: 2246:    win->table->gr=gtk_grid_new();
+        1: 2246-block  0
+call    0 returned 1
+        1: 2247:    win->table->last=NULL;
+        9: 2248:    for (i=0;i<=7;i++)
+        8: 2248-block  0
+        9: 2248-block  1
+branch  0 taken 8
+branch  1 taken 1 (fallthrough)
+        -: 2249:    {
+       72: 2250:        for(j=0;j<=7;j++)
+        8: 2250-block  0
+       64: 2250-block  1
+       72: 2250-block  2
+branch  0 taken 64
+branch  1 taken 8 (fallthrough)
+        -: 2251:        {
+       64: 2252:            win->table->filed[i][j]=creer_field();
+       64: 2252-block  0
+call    0 returned 64
+       64: 2253:            win->table->filed[i][j]->view_table=NULL;
+       64: 2254:            win->table->filed[i][j]->button=gtk_button_new();
+call    0 returned 64
+       64: 2255:            context = gtk_widget_get_style_context(win->table->filed[i][j]->button);
+call    0 returned 64
+       64: 2256:            gtk_style_context_add_class(GTK_STYLE_CONTEXT(context),"chks-field");
+call    0 returned 64
+call    1 returned 64
+       64: 2257:            gtk_container_set_border_width(GTK_CONTAINER(win->table->filed[i][j]->button),7);
+call    0 returned 64
+call    1 returned 64
+       64: 2258:            win->table->filed[i][j]->is_queen=FALSE;
+       64: 2259:            win->table->filed[i][j]->row=i+1;
+       64: 2260:            win->table->filed[i][j]->col=j+1;
+       64: 2261:            if((win->user->Tab[k].x==(i+1)) &&
+branch  0 taken 23 (fallthrough)
+branch  1 taken 41
+       23: 2262:               (win->user->Tab[k].y==(j+1)))
+       23: 2262-block  0
+branch  0 taken 12 (fallthrough)
+branch  1 taken 11
+        -: 2263:            {
+       12: 2264:                win->table->filed[i][j]->owner=CHKS_OWNER_ONE;//user
+       12: 2265:                k++;
+       12: 2265-block  0
+       52: 2266:            }else if((win->machine->Tab[m].x==(i+1)) &&
+       52: 2266-block  0
+branch  0 taken 22 (fallthrough)
+branch  1 taken 30
+       22: 2267:                     (win->machine->Tab[m].y==(j+1)))
+       22: 2267-block  0
+branch  0 taken 12 (fallthrough)
+branch  1 taken 10
+        -: 2268:            {
+       12: 2269:                win->table->filed[i][j]->owner=CHKS_OWNER_TWO;//machine
+       12: 2270:                m++;
+       12: 2270-block  0
+       40: 2271:            }else win->table->filed[i][j]->owner=CHKS_OWNER_NONE;
+       40: 2271-block  0
+        -: 2272:
+        -: 2273:        }
+        -: 2274:    }
+        1: 2275:    apply_style_button(win->table->filed);
+        1: 2275-block  0
+call    0 returned 1
+        1: 2276:    add_filed_grid(win,win->table->filed);
+call    0 returned 1
+        1: 2277:}
+        -: 2278:
+function creer_Chkswindow called 1 returned 100% blocks executed 75%
+        1: 2279:Chkswindow *creer_Chkswindow()
+        -: 2280:{
+        1: 2281:    Chkswindow *win=(Chkswindow*) malloc(sizeof (Chkswindow));
+        1: 2282:    if(!win)
+        1: 2282-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1
+        -: 2283:    {
+    #####: 2284:        printf("error allocation \n");
+    %%%%%: 2284-block  0
+call    0 never executed
+    #####: 2285:        exit(-1);
+call    0 never executed
+        -: 2286:    }
+        1: 2287:    win->table=creer_table();
+        1: 2287-block  0
+call    0 returned 1
+        1: 2288:    win->user=creer_player();
+call    0 returned 1
+        1: 2289:    win->machine=creer_player();
+call    0 returned 1
+        1: 2290:    return (Chkswindow*)win;
+        -: 2291:}
+        -: 2292:
+function Make_headerbar called 1 returned 100% blocks executed 100%
+        1: 2293:GtkWidget *Make_headerbar()
+        -: 2294:{
+        -: 2295:    GtkWidget *hd;
+        -: 2296:    GtkWidget *btn;
+        1: 2297:    hd=gtk_header_bar_new();
+        1: 2297-block  0
+call    0 returned 1
+        1: 2298:    btn= gtk_button_new_with_label("New game");
+call    0 returned 1
+        1: 2299:    GtkStyleContext* context = gtk_widget_get_style_context(btn);
+call    0 returned 1
+        1: 2300:    gtk_style_context_add_class(GTK_STYLE_CONTEXT(context),"Newgamebtn");
+call    0 returned 1
+call    1 returned 1
+        1: 2301:    gtk_header_bar_pack_end(GTK_HEADER_BAR(hd),btn);
+call    0 returned 1
+call    1 returned 1
+        1: 2302:    gtk_header_bar_set_title(GTK_HEADER_BAR(hd),"Checkers Game project GTK");
+call    0 returned 1
+call    1 returned 1
+        1: 2303:    gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(hd),TRUE);
+call    0 returned 1
+call    1 returned 1
+        1: 2304:    return (GtkWidget*)hd;
+        -: 2305:}
+        -: 2306:
+function init_player called 2 returned 100% blocks executed 100%
+        2: 2307:void init_player(ChkPlayer *pl, ChksOwner owner)
+        -: 2308:{
+        2: 2309:    int i,j,k=0;
+        2: 2310:    switch (owner) {
+        2: 2310-block  0
+branch  0 taken 1
+branch  1 taken 1
+branch  2 taken 0
+        1: 2311:        case CHKS_OWNER_ONE:
+        4: 2312:            for (i=1;i<=3;i++)
+        1: 2312-block  0
+        3: 2312-block  1
+        4: 2312-block  2
+branch  0 taken 3
+branch  1 taken 1 (fallthrough)
+        -: 2313:            {
+        -: 2314:                switch (i) {
+        2: 2315:                    case 1:
+        -: 2316:                    case 3:
+       10: 2317:                        for (j=2;j<=8;j+=2)
+        2: 2317-block  0
+       10: 2317-block  1
+branch  0 taken 8
+branch  1 taken 2 (fallthrough)
+        -: 2318:                        {
+        8: 2319:                            pl->Tab[k].x=i;
+        8: 2320:                            pl->Tab[k].y=j;
+        8: 2321:                            k++;
+        8: 2322:                            pl->nbr_piece_disp++;
+        8: 2322-block  0
+        -: 2323:                        }
+        2: 2324:                        break;
+        2: 2324-block  0
+        1: 2325:                    case 2:
+        5: 2326:                        for (j=1;j<=7;j+=2)
+        1: 2326-block  0
+        5: 2326-block  1
+branch  0 taken 4
+branch  1 taken 1 (fallthrough)
+        -: 2327:                        {
+        4: 2328:                            pl->Tab[k].x=i;
+        4: 2329:                            pl->Tab[k].y=j;
+        4: 2330:                            k++;
+        4: 2331:                            pl->nbr_piece_disp++;
+        4: 2331-block  0
+        -: 2332:                        }
+        1: 2333:                        break;
+        1: 2333-block  0
+        -: 2334:                }
+        -: 2335:            }
+        1: 2336:            break;
+        1: 2336-block  0
+        1: 2337:        case CHKS_OWNER_TWO:
+        4: 2338:            for (i=6;i<=8;i++)
+        1: 2338-block  0
+        3: 2338-block  1
+        4: 2338-block  2
+branch  0 taken 3
+branch  1 taken 1 (fallthrough)
+        -: 2339:            {
+        -: 2340:                switch (i) {
+        2: 2341:                    case 6:
+        -: 2342:                    case 8:
+       10: 2343:                        for (j=1;j<=7;j+=2)
+        2: 2343-block  0
+       10: 2343-block  1
+branch  0 taken 8
+branch  1 taken 2 (fallthrough)
+        -: 2344:                        {
+        8: 2345:                            pl->Tab[k].x=i;
+        8: 2346:                            pl->Tab[k].y=j;
+        8: 2347:                            k++;
+        8: 2348:                            pl->nbr_piece_disp++;
+        8: 2348-block  0
+        -: 2349:                        }
+        2: 2350:                        break;
+        2: 2350-block  0
+        1: 2351:                    case 7:
+        5: 2352:                        for (j=2;j<=8;j+=2)
+        1: 2352-block  0
+        5: 2352-block  1
+branch  0 taken 4
+branch  1 taken 1 (fallthrough)
+        -: 2353:                        {
+        4: 2354:                            pl->Tab[k].x=i;
+        4: 2355:                            pl->Tab[k].y=j;
+        4: 2356:                            k++;
+        4: 2357:                            pl->nbr_piece_disp++;
+        4: 2357-block  0
+        -: 2358:                        }
+        1: 2359:                        break;
+        1: 2359-block  0
+        -: 2360:                }
+        -: 2361:            }
+        1: 2362:            break;
+        1: 2362-block  0
+        -: 2363:    }
+        2: 2364:}
+        -: 2365:
+function init_window called 1 returned 100% blocks executed 100%
+        1: 2366:void init_window(int depth)
+        -: 2367:{
+        1: 2368:    Chkswindow *win=creer_Chkswindow();
+        1: 2368-block  0
+call    0 returned 1
+        1: 2369:    win->win= gtk_window_new(GTK_WINDOW_TOPLEVEL);
+call    0 returned 1
+        1: 2370:    gtk_window_set_default_size(GTK_WINDOW(win->win),600,600);
+call    0 returned 1
+call    1 returned 1
+        1: 2371:    gtk_window_move(GTK_WINDOW(win->win),2000,100);
+call    0 returned 1
+call    1 returned 1
+        1: 2372:    g_signal_connect(win->win,"destroy",G_CALLBACK(gtk_main_quit),NULL);
+call    0 returned 1
+        1: 2373:    win->header_bar=Make_headerbar();
+call    0 returned 1
+        1: 2374:    win->g=(Glob*)malloc(sizeof (Glob));
+        1: 2375:    win->g->f=creer_initaliser_file();
+call    0 returned 1
+        1: 2376:    win->g->field=NULL;
+        1: 2377:    win->depth=depth;
+        1: 2378:    g_signal_connect(win->win,"key-press-event",G_CALLBACK(effectuer_moumvment),win->g);
+call    0 returned 1
+        1: 2379:    gtk_window_set_titlebar(GTK_WINDOW(win->win),win->header_bar);
+call    0 returned 1
+call    1 returned 1
+        1: 2380:    init_player(win->user,CHKS_OWNER_ONE);
+call    0 returned 1
+        1: 2381:    init_player(win->machine,CHKS_OWNER_TWO);
+call    0 returned 1
+        1: 2382:    init_table(win);
+call    0 returned 1
+        1: 2383:    gtk_container_add(GTK_CONTAINER(win->win),win->table->gr);
+call    0 returned 1
+call    1 returned 1
+        1: 2384:    gtk_widget_show_all(win->win);
+call    0 returned 1
+        1: 2385:}
+        -: 2386:
+        -: 2387:
+        -: 2388:
+        -: 2389:
+function main called 1 returned 0% blocks executed 80%
+        1: 2390:int main(int argc,char *argv[])
+        -: 2391:{
+        1: 2392:    gtk_init(&argc, &argv);
+        1: 2392-block  0
+call    0 returned 1
+        1: 2393:    init_window(2);
+call    0 returned 1
+        -: 2394:
+        1: 2395:    gtk_main();
+call    0 returned 0
+    #####: 2396:    return 0;
+        -: 2397:}
+        -: 2398:
+        -: 2399:
+        -: 2400:
+        -: 2401:
+        -: 2402:
+        -: 2403:
+        -: 2404:
+        -: 2405:
+        -: 2406:
+        -: 2407:
+        -: 2408:
+        -: 2409:
+        -: 2410:
+        -: 2411:
+        -: 2412:
