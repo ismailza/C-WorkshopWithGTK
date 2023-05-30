@@ -1602,7 +1602,6 @@ cellule2 **table_arbre_shemin(cellule2 **cl,etat_window *etw,ChksOwner owner)
                 col=etw->user->Tab[i].y;
                 if(!etw->filed[row-1][col-1]->is_queen)
                 {
-
                     if((row+1-1<=7) && (col-1-1>=0))
                     {
                         if(etw->filed[row+1-1][col-1-1]->owner==CHKS_OWNER_NONE)//left
@@ -2103,7 +2102,6 @@ int Minmaxalgorithm(ChksOwner owner,int depth,etat_window *etw,bestpath *bs)
         }
         return (int)max;
     }
-
 }
 int Minmaxalgorithm2(ChksOwner owner,int depth,etat_window *etw,bestpath *bs)
 {
@@ -2111,7 +2109,7 @@ int Minmaxalgorithm2(ChksOwner owner,int depth,etat_window *etw,bestpath *bs)
     GtkStyleContext* context;
     if(depth==0)
         return (int)(etw->machine->nbr_piece_disp-etw->user->nbr_piece_disp);
-    if(owner==CHKS_OWNER_TWO) //user
+    if(owner==CHKS_OWNER_TWO) //machine
     {
         cellule2 **cl=NULL;
         cl=table_arbre_shemin(cl,etw,CHKS_OWNER_TWO);
@@ -2154,7 +2152,7 @@ int Minmaxalgorithm2(ChksOwner owner,int depth,etat_window *etw,bestpath *bs)
                 last->is_queen=FALSE;
             }
             change_row_col_piece(etw1,field,row,col,CHKS_OWNER_TWO);
-            p->score=Minmaxalgorithm(CHKS_OWNER_ONE,depth-1,etw1,bs);
+            p->score=Minmaxalgorithm2(CHKS_OWNER_ONE,depth-1,etw1,bs);
             p=p->suiv;
         }
         if(ll)min=minimun_cellule5(ll);
@@ -2208,7 +2206,7 @@ int Minmaxalgorithm2(ChksOwner owner,int depth,etat_window *etw,bestpath *bs)
             }
             //last est la destination
             change_row_col_piece(etw1,field,row,col,CHKS_OWNER_ONE);
-            p->score=Minmaxalgorithm(CHKS_OWNER_TWO,depth-1,etw1,bs);
+            p->score=Minmaxalgorithm2(CHKS_OWNER_TWO,depth-1,etw1,bs);
             p=p->suiv;
         }
         if(ll)max=maximun_cellule5(ll);
@@ -2454,6 +2452,7 @@ gboolean BotVsBot(Chkswindow *win)
         if (!p->best->tete) {
             //machine lose
             win->user->nbr_piece_disp = 0;
+            return TRUE;
         }
         row = win->user->Tab[p->numfield].x;
         col = win->user->Tab[p->numfield].y;
@@ -2491,6 +2490,7 @@ gboolean BotVsBot(Chkswindow *win)
         if (!p->best->tete) {
             //machine lose
             win->machine->nbr_piece_disp = 0;
+            return TRUE;
         }
         row = win->machine->Tab[p->numfield].x;
         col = win->machine->Tab[p->numfield].y;
@@ -2654,7 +2654,7 @@ int main(int argc,char *argv[])
 {
     gtk_init(&argc, &argv);
 //    init_window(2);
-    init_window1(4);
+    init_window1(6);
 
     gtk_main();
     return 0;
