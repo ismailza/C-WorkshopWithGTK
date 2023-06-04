@@ -257,62 +257,20 @@ GtkWidget *Make_headerbar(Chkswindow *win)
     return (GtkWidget*)hd;
 }
 
-void init_player(ChkPlayer *pl, ChksOwner owner)
+Chkswindow *make_window(Chkswindow *win)
 {
-    pl->nbr_piece_disp=0;
-    int i,j,k=0;
-    switch (owner) {
-        case CHKS_OWNER_ONE:
-            for (i=1;i<=3;i++)
-            {
-                switch (i) {
-                    case 1:
-                    case 3:
-                        for (j=2;j<=8;j+=2)
-                        {
-                            pl->Tab[k].x=i;
-                            pl->Tab[k].y=j;
-                            k++;
-                            pl->nbr_piece_disp++;
-                        }
-                        break;
-                    case 2:
-                        for (j=1;j<=7;j+=2)
-                        {
-                            pl->Tab[k].x=i;
-                            pl->Tab[k].y=j;
-                            k++;
-                            pl->nbr_piece_disp++;
-                        }
-                        break;
-                }
-            }
-            break;
-        case CHKS_OWNER_TWO:
-            for (i=6;i<=8;i++)
-            {
-                switch (i) {
-                    case 6:
-                    case 8:
-                        for (j=1;j<=7;j+=2)
-                        {
-                            pl->Tab[k].x=i;
-                            pl->Tab[k].y=j;
-                            k++;
-                            pl->nbr_piece_disp++;
-                        }
-                        break;
-                    case 7:
-                        for (j=2;j<=8;j+=2)
-                        {
-                            pl->Tab[k].x=i;
-                            pl->Tab[k].y=j;
-                            k++;
-                            pl->nbr_piece_disp++;
-                        }
-                        break;
-                }
-            }
-            break;
-    }
+    win->win= gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_default_size(GTK_WINDOW(win->win),600,600);
+    gtk_window_move(GTK_WINDOW(win->win),2000,100);
+    g_signal_connect(win->win,"destroy",G_CALLBACK(gtk_main_quit),NULL);
+    win->g = (Glob*)malloc(sizeof (Glob));
+    win->g->f = creer_initaliser_file();
+    win->g->field = NULL;
+    init_table(win);
+    gtk_container_add(GTK_CONTAINER(win->win),win->table->gr);
+    win->header_bar = Make_headerbar(win);
+    win->round=1;
+    gtk_window_set_titlebar(GTK_WINDOW(win->win),win->header_bar);
+    g_signal_connect(win->win,"key-press-event",G_CALLBACK(effectuer_moumvment),win->g);
+    gtk_widget_show_all(win->win);
 }

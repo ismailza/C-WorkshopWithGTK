@@ -58,5 +58,5 @@ void          init_table                      (Chkswindow *);
 gboolean      BotVsBot                        (Chkswindow *);
 void          Myfonct                         (GtkWidget *,Chkswindow *);
 GtkWidget     *Make_headerbar                 (Chkswindow *);
-void          init_player                     (ChkPlayer *, ChksOwner);
+int           init_player                     (ChkPlayer *, ChksOwner);
 void          init_window                     (int, int );

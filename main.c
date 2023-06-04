@@ -1778,6 +1778,27 @@ void arbre_descicion(Glob *g)
     }
 }
 
+int init_player(ChkPlayer *pl, ChksOwner owner)
+{
+  int i, j, n, m, k = 0;
+  if (owner == CHKS_OWNER_ONE) n = 1;
+	else if (owner == CHKS_OWNER_TWO) n = 6;
+	else return ((int)0);
+	m = n + 2;
+  for (i = n; i <= m; i++)
+  {
+    for (j = (i%2)+1; j <= 8; j+=2)
+    {
+      pl->Tab[k].x=i;
+      pl->Tab[k].y=j;
+      k++;
+    }
+  }
+	pl->nbr_piece_disp = 12;
+	return ((int)1);
+}
+
+
 void init_table(Chkswindow *win)
 {
     int i,j,k=0,m=0;
@@ -1919,30 +1940,15 @@ gboolean BotVsBot(Chkswindow *win)
 
 void Principale_fonction()
 {
-    Chkswindow *win=creer_Chkswindow();
-    win->win= gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_default_size(GTK_WINDOW(win->win),600,600);
-    gtk_window_move(GTK_WINDOW(win->win),2000,100);
-    g_signal_connect(win->win,"destroy",G_CALLBACK(gtk_main_quit),NULL);
-    win->g=(Glob*)malloc(sizeof (Glob));
-    win->g->f=creer_initaliser_file();
-    win->g->field=NULL;
-    init_table(win);
-    gtk_container_add(GTK_CONTAINER(win->win),win->table->gr);
-    win->header_bar=Make_headerbar(win);
-    win->round=1;
-    gtk_window_set_titlebar(GTK_WINDOW(win->win),win->header_bar);
-    g_signal_connect(win->win,"key-press-event",G_CALLBACK(effectuer_moumvment),win->g);
-    gtk_widget_show_all(win->win);
-
+    Chkswindow *win = creer_Chkswindow();
+    make_window(win);    
 }
-
 
 int main(int argc,char *argv[])
 {
     gtk_init(&argc, &argv);
+    
     Principale_fonction();
-//    init_window1(2);
 
     gtk_main();
     return 0;
